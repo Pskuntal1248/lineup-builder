@@ -1,0 +1,93 @@
+.pitch {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 3/4;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pitch--square {
+  aspect-ratio: 1/1;
+}
+
+.pitch--landscape {
+  aspect-ratio: 4/3;
+  max-width: 500px;
+}
+
+.pitch--portrait {
+  aspect-ratio: 3/4;
+}
+
+.pitch-markings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.position-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.position-marker:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.position-marker--selected .position-empty {
+  border-color: var(--accent);
+  background: rgba(29, 155, 240, 0.3);
+}
+
+.position-marker--drag-over .position-empty {
+  border-color: var(--success);
+  background: rgba(0, 186, 124, 0.3);
+  transform: scale(1.1);
+}
+
+.position-empty {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.position-empty:hover {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.position-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pitch {
+    max-width: 100%;
+  }
+  
+  .position-empty {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .position-label {
+    font-size: 8px;
+  }
+}

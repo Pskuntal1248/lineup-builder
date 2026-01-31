@@ -1,0 +1,285 @@
+.sidebar {
+  width: 280px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  max-height: calc(100vh - 92px);
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+/* Formation Grid */
+.formation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.formation-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.formation-btn:hover {
+  background: var(--bg-primary);
+  border-color: var(--border);
+}
+
+.formation-btn--active {
+  border-color: var(--accent);
+  background: rgba(29, 155, 240, 0.1);
+}
+
+.formation-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.formation-category {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.formation-category--attacking {
+  background: rgba(244, 33, 46, 0.2);
+  color: #ff6b6b;
+}
+
+.formation-category--balanced {
+  background: rgba(255, 173, 31, 0.2);
+  color: #ffc107;
+}
+
+.formation-category--defensive {
+  background: rgba(0, 186, 124, 0.2);
+  color: #00ba7c;
+}
+
+/* Style Grid */
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.style-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.style-btn:hover {
+  border-color: var(--border);
+}
+
+.style-btn--active {
+  border-color: var(--accent);
+}
+
+.style-preview {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+.style-label {
+  font-size: 9px;
+  color: var(--text-secondary);
+}
+
+/* Color Grid */
+.color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.color-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+}
+
+.color-btn--active {
+  border-color: white;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.color-picker {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+}
+
+.color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+/* Toggle List */
+.toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.toggle-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.toggle-label {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+/* Orientation Buttons */
+.orientation-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.orient-btn {
+  flex: 1;
+  padding: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-primary);
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.orient-btn:hover {
+  background: var(--bg-primary);
+}
+
+.orient-btn--active {
+  border-color: var(--accent);
+  background: rgba(29, 155, 240, 0.1);
+}
+
+/* Aspect Ratio Buttons */
+.aspect-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.aspect-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.aspect-btn:hover {
+  border-color: var(--border);
+}
+
+.aspect-btn--active {
+  border-color: var(--accent);
+}
+
+.aspect-icon {
+  background: var(--text-secondary);
+  border-radius: 2px;
+}
+
+.aspect-icon--square {
+  width: 20px;
+  height: 20px;
+}
+
+.aspect-icon--portrait {
+  width: 16px;
+  height: 22px;
+}
+
+.aspect-icon--landscape {
+  width: 24px;
+  height: 16px;
+}
+
+.aspect-label {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-height: none;
+    gap: 16px;
+  }
+  
+  .sidebar-section {
+    flex: 1;
+    min-width: 200px;
+  }
+}
