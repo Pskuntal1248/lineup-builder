@@ -1,6 +1,7 @@
-const API_BASE = '/api'
+const API_BASE = import.meta.env.VITE_API_URL || '/api'
+const SCRAPER_API = import.meta.env.VITE_SCRAPER_URL || 'http://localhost:5000/api'
 
-async function fetchWithTimeout(url, options = {}, timeout = 5000) {
+async function fetchWithTimeout(url, options = {}, timeout = 30000) {
   const controller = new AbortController()
   const id = setTimeout(() => controller.abort(), timeout)
   
@@ -78,6 +79,35 @@ export const api = {
         settings,
         format
       })
+    })
+  },
+
+  // Scraper API - Team Selection and Live Scraping
+  async getScrapableLeagues() {
+    return fetchWithTimeout(`${SCRAPER_API}/leagues`, {}, 10000)
+  },
+
+  async getTeamsInLeague(leagueId) {
+    return fetchWithTimeout(`${SCRAPER_API}/leagues/${leagueId}/teams`, {}, 15000)
+  },
+
+  async scrapeTeam(teamId, teamName, leagueId) {
+    return fetchWithTimeout(`${SCRAPER_API}/teams/scrape`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        team_id: teamId,
+        team_name: teamName,
+        league_id: leagueId
+      })
+    }, 60000) // 60 second timeout for scraping
+  },
+
+  async clearScraperCache() {
+    return fetchWithTimeout(`${SCRAPER_API}/cache/clear`, {
+      method: 'POST'
     })
   }
 }

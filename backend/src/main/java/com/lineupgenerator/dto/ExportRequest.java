@@ -8,7 +8,7 @@ public record ExportRequest(
     String formationId,
     List<LineupPlayer> players,
     LineupSettings settings,
-    String format,  // "png" or "svg"
+    String format, 
     int width,
     int height
 ) {

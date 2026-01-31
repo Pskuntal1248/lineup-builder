@@ -1,7 +1,8 @@
 .player-search-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,21 +12,22 @@
 
 .player-search {
   width: 100%;
-  max-width: 500px;
-  max-height: 80vh;
+  max-width: 520px;
+  max-height: 75vh;
   background: var(--bg-secondary);
-  border-radius: 16px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border);
 }
 
 .player-search-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -35,29 +37,30 @@
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .position-badge {
   font-size: 11px;
-  padding: 4px 8px;
+  padding: 5px 10px;
   background: var(--accent);
   color: white;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .player-search-close {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   background: var(--bg-tertiary);
-  color: var(--text-primary);
+  color: var(--text-secondary);
   font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .player-search-close:hover {
@@ -67,57 +70,60 @@
 
 .player-search-input-wrapper {
   position: relative;
-  padding: 16px 20px;
+  padding: 20px 24px;
 }
 
 .player-search-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 18px;
   background: var(--bg-tertiary);
   border: 2px solid transparent;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 15px;
   color: var(--text-primary);
-  transition: border-color 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .player-search-input:focus {
   border-color: var(--accent);
+  background: var(--bg-card);
 }
 
 .player-search-input::placeholder {
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .search-loading {
   position: absolute;
-  right: 32px;
+  right: 40px;
   top: 50%;
   transform: translateY(-50%);
+  color: var(--accent);
 }
 
 .player-search-results {
   flex: 1;
   overflow-y: auto;
-  padding: 0 12px 12px;
+  padding: 0 16px 16px;
 }
 
 .player-search-empty {
-  padding: 40px 20px;
+  padding: 48px 24px;
   text-align: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 .player-result {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
+  gap: 14px;
+  padding: 14px;
   background: transparent;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: left;
-  transition: background 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .player-result:hover {
@@ -125,15 +131,16 @@
 }
 
 .player-result-avatar {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: var(--accent);
+  background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-card));
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  border: 2px solid var(--border);
 }
 
 .player-result-avatar img {
@@ -145,7 +152,7 @@
 .player-result-initials {
   font-size: 16px;
   font-weight: 600;
-  color: white;
+  color: var(--text-secondary);
 }
 
 .player-result-info {
@@ -154,16 +161,17 @@
 }
 
 .player-result-name {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 2px;
 }
 
 .player-result-meta {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -172,24 +180,25 @@
 
 .player-result-positions {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .player-result-position {
   font-size: 10px;
-  padding: 2px 6px;
+  padding: 4px 8px;
   background: var(--bg-primary);
   color: var(--text-secondary);
-  border-radius: 4px;
-  font-weight: 500;
+  border-radius: 6px;
+  font-weight: 600;
+  border: 1px solid var(--border);
 }
 
 .player-result-number {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-secondary);
-  min-width: 32px;
+  color: var(--text-muted);
+  min-width: 36px;
   text-align: right;
 }
 

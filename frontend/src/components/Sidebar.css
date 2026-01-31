@@ -1,27 +1,28 @@
 .sidebar {
   width: 280px;
   background: var(--bg-secondary);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   overflow-y: auto;
-  max-height: calc(100vh - 92px);
+  max-height: calc(100vh - 104px);
+  border: 1px solid var(--border);
 }
 
 .sidebar-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .sidebar-title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
 }
 
 /* Formation Grid */
@@ -35,22 +36,22 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 10px 8px;
+  gap: 6px;
+  padding: 12px 8px;
   background: var(--bg-tertiary);
-  border-radius: 8px;
+  border-radius: 10px;
   border: 2px solid transparent;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .formation-btn:hover {
-  background: var(--bg-primary);
-  border-color: var(--border);
+  background: var(--bg-card);
+  border-color: var(--border-light);
 }
 
 .formation-btn--active {
   border-color: var(--accent);
-  background: rgba(29, 155, 240, 0.1);
+  background: rgba(16, 185, 129, 0.1);
 }
 
 .formation-name {
@@ -61,25 +62,26 @@
 
 .formation-category {
   font-size: 9px;
-  padding: 2px 6px;
-  border-radius: 10px;
+  padding: 3px 8px;
+  border-radius: 12px;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .formation-category--attacking {
-  background: rgba(244, 33, 46, 0.2);
-  color: #ff6b6b;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
 }
 
 .formation-category--balanced {
-  background: rgba(255, 173, 31, 0.2);
-  color: #ffc107;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
 }
 
 .formation-category--defensive {
-  background: rgba(0, 186, 124, 0.2);
-  color: #00ba7c;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
 }
 
 /* Style Grid */
@@ -93,16 +95,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 8px;
+  gap: 6px;
+  padding: 10px 8px;
   background: var(--bg-tertiary);
-  border-radius: 8px;
+  border-radius: 10px;
   border: 2px solid transparent;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .style-btn:hover {
-  border-color: var(--border);
+  border-color: var(--border-light);
 }
 
 .style-btn--active {
@@ -110,13 +112,14 @@
 }
 
 .style-preview {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
 }
 
 .style-label {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--text-secondary);
 }
 
@@ -124,29 +127,30 @@
 .color-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .color-btn {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 2px solid transparent;
-  transition: all 0.15s ease;
+  border: 3px solid transparent;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .color-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .color-btn--active {
   border-color: white;
-  box-shadow: 0 0 0 2px var(--accent);
+  box-shadow: 0 0 0 2px var(--accent), 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .color-picker {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -167,25 +171,27 @@
 .toggle-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .toggle-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   cursor: pointer;
+  padding: 4px 0;
 }
 
 .toggle-item input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   accent-color: var(--accent);
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .toggle-label {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-primary);
 }
 

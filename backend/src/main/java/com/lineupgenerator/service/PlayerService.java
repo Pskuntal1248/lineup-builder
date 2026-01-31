@@ -1,90 +1,128 @@
 package com.lineupgenerator.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lineupgenerator.dto.PlayerSearchRequest;
 import com.lineupgenerator.dto.SearchResultDTO;
 import com.lineupgenerator.dto.PlayerDTO;
 import com.lineupgenerator.model.Player;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class PlayerService {
     
+    private static final Logger logger = LoggerFactory.getLogger(PlayerService.class);
+    
     private final List<Player> players = new ArrayList<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    
+    @Value("${scraper.output.dir:../scraper/output}")
+    private String scraperOutputDir;
     
     @PostConstruct
-    public void initializeSamplePlayers() {
-        // Sample players - in production, this would come from a database
-        addSamplePlayers();
+    public void initializePlayers() {
+        loadPlayersFromScraperOutput();
     }
     
-    private void addSamplePlayers() {
-        // Goalkeepers
-        players.add(new Player(null, "Manuel Neuer", null, List.of("GK"), "Bayern Munich", "Germany", "Bundesliga", null, 1));
-        players.add(new Player(null, "Alisson Becker", null, List.of("GK"), "Liverpool", "Brazil", "Premier League", null, 1));
-        players.add(new Player(null, "Thibaut Courtois", null, List.of("GK"), "Real Madrid", "Belgium", "La Liga", null, 1));
-        players.add(new Player(null, "Ederson Moraes", null, List.of("GK"), "Manchester City", "Brazil", "Premier League", null, 31));
-        players.add(new Player(null, "Marc-André ter Stegen", null, List.of("GK"), "Barcelona", "Germany", "La Liga", null, 1));
+    private void loadPlayersFromScraperOutput() {
+        try {
+            Path outputPath = Paths.get(scraperOutputDir).toAbsolutePath();
+            logger.info("Looking for scraped data in: {}", outputPath);
+            
+            if (!Files.exists(outputPath)) {
+                logger.warn("Scraper output directory not found: {}", outputPath);
+                logger.info("No scraped data available. Run the scraper first: cd ../scraper && python3 main.py");
+                return;
+            }
+            
+            // First try to load all-players.json (combined file)
+            Path combinedFile = outputPath.resolve("all-players.json");
+            if (Files.exists(combinedFile)) {
+                loadFromJsonFile(combinedFile.toFile());
+                return;
+            }
+            
+            // Otherwise load individual league files
+            try (Stream<Path> files = Files.list(outputPath)) {
+                files.filter(p -> p.toString().endsWith(".json"))
+                     .forEach(p -> {
+                         try {
+                             loadFromJsonFile(p.toFile());
+                         } catch (Exception e) {
+                             logger.warn("Failed to load {}: {}", p.getFileName(), e.getMessage());
+                         }
+                     });
+            }
+            
+            logger.info("Loaded {} players from scraped data", players.size());
+            
+        } catch (Exception e) {
+            logger.error("Failed to load players from scraper output: {}", e.getMessage());
+            logger.info("No player data available. Run the scraper: cd ../scraper && python3 main.py");
+        }
+    }
+    
+    private void loadFromJsonFile(File file) throws IOException {
+        JsonNode root = objectMapper.readTree(file);
+        JsonNode playersNode = root.get("players");
         
-        // Defenders
-        players.add(new Player(null, "Virgil van Dijk", null, List.of("CB"), "Liverpool", "Netherlands", "Premier League", null, 4));
-        players.add(new Player(null, "Rúben Dias", null, List.of("CB"), "Manchester City", "Portugal", "Premier League", null, 3));
-        players.add(new Player(null, "Antonio Rüdiger", null, List.of("CB"), "Real Madrid", "Germany", "La Liga", null, 22));
-        players.add(new Player(null, "Marquinhos", null, List.of("CB", "CDM"), "Paris Saint-Germain", "Brazil", "Ligue 1", null, 5));
-        players.add(new Player(null, "William Saliba", null, List.of("CB"), "Arsenal", "France", "Premier League", null, 2));
-        
-        players.add(new Player(null, "Trent Alexander-Arnold", null, List.of("RB", "CM"), "Liverpool", "England", "Premier League", null, 66));
-        players.add(new Player(null, "Kyle Walker", null, List.of("RB"), "Manchester City", "England", "Premier League", null, 2));
-        players.add(new Player(null, "João Cancelo", null, List.of("RB", "LB"), "Barcelona", "Portugal", "La Liga", null, 2));
-        players.add(new Player(null, "Achraf Hakimi", null, List.of("RB", "RWB"), "Paris Saint-Germain", "Morocco", "Ligue 1", null, 2));
-        
-        players.add(new Player(null, "Andrew Robertson", null, List.of("LB"), "Liverpool", "Scotland", "Premier League", null, 26));
-        players.add(new Player(null, "Alphonso Davies", null, List.of("LB", "LW"), "Bayern Munich", "Canada", "Bundesliga", null, 19));
-        players.add(new Player(null, "Theo Hernández", null, List.of("LB"), "AC Milan", "France", "Serie A", null, 19));
-        
-        // Midfielders
-        players.add(new Player(null, "Kevin De Bruyne", null, List.of("CM", "CAM"), "Manchester City", "Belgium", "Premier League", null, 17));
-        players.add(new Player(null, "Luka Modrić", null, List.of("CM"), "Real Madrid", "Croatia", "La Liga", null, 10));
-        players.add(new Player(null, "Jude Bellingham", null, List.of("CM", "CAM"), "Real Madrid", "England", "La Liga", null, 5));
-        players.add(new Player(null, "Pedri", null, List.of("CM", "CAM"), "Barcelona", "Spain", "La Liga", null, 8));
-        players.add(new Player(null, "Rodri", null, List.of("CDM", "CM"), "Manchester City", "Spain", "Premier League", null, 16));
-        players.add(new Player(null, "Declan Rice", null, List.of("CDM", "CM"), "Arsenal", "England", "Premier League", null, 41));
-        players.add(new Player(null, "Federico Valverde", null, List.of("CM", "RW"), "Real Madrid", "Uruguay", "La Liga", null, 15));
-        players.add(new Player(null, "Bruno Fernandes", null, List.of("CAM", "CM"), "Manchester United", "Portugal", "Premier League", null, 8));
-        players.add(new Player(null, "Martin Ødegaard", null, List.of("CAM", "CM"), "Arsenal", "Norway", "Premier League", null, 8));
-        players.add(new Player(null, "Frenkie de Jong", null, List.of("CM", "CDM"), "Barcelona", "Netherlands", "La Liga", null, 21));
-        players.add(new Player(null, "Joshua Kimmich", null, List.of("CDM", "RB"), "Bayern Munich", "Germany", "Bundesliga", null, 6));
-        players.add(new Player(null, "Aurélien Tchouaméni", null, List.of("CDM", "CM"), "Real Madrid", "France", "La Liga", null, 18));
-        
-        // Wingers
-        players.add(new Player(null, "Vinícius Júnior", null, List.of("LW", "RW"), "Real Madrid", "Brazil", "La Liga", null, 7));
-        players.add(new Player(null, "Kylian Mbappé", null, List.of("LW", "ST", "RW"), "Real Madrid", "France", "La Liga", null, 9));
-        players.add(new Player(null, "Bukayo Saka", null, List.of("RW", "LW"), "Arsenal", "England", "Premier League", null, 7));
-        players.add(new Player(null, "Mohamed Salah", null, List.of("RW"), "Liverpool", "Egypt", "Premier League", null, 11));
-        players.add(new Player(null, "Phil Foden", null, List.of("LW", "RW", "CAM"), "Manchester City", "England", "Premier League", null, 47));
-        players.add(new Player(null, "Jamal Musiala", null, List.of("CAM", "LW", "RW"), "Bayern Munich", "Germany", "Bundesliga", null, 42));
-        players.add(new Player(null, "Ousmane Dembélé", null, List.of("RW", "LW"), "Paris Saint-Germain", "France", "Ligue 1", null, 10));
-        players.add(new Player(null, "Rafael Leão", null, List.of("LW"), "AC Milan", "Portugal", "Serie A", null, 10));
-        players.add(new Player(null, "Marcus Rashford", null, List.of("LW", "ST"), "Manchester United", "England", "Premier League", null, 10));
-        
-        // Forwards
-        players.add(new Player(null, "Erling Haaland", null, List.of("ST"), "Manchester City", "Norway", "Premier League", null, 9));
-        players.add(new Player(null, "Harry Kane", null, List.of("ST"), "Bayern Munich", "England", "Bundesliga", null, 9));
-        players.add(new Player(null, "Lautaro Martínez", null, List.of("ST"), "Inter Milan", "Argentina", "Serie A", null, 10));
-        players.add(new Player(null, "Victor Osimhen", null, List.of("ST"), "Napoli", "Nigeria", "Serie A", null, 9));
-        players.add(new Player(null, "Robert Lewandowski", null, List.of("ST"), "Barcelona", "Poland", "La Liga", null, 9));
-        players.add(new Player(null, "Darwin Núñez", null, List.of("ST", "LW"), "Liverpool", "Uruguay", "Premier League", null, 9));
-        players.add(new Player(null, "Julián Álvarez", null, List.of("ST", "CAM"), "Atlético Madrid", "Argentina", "La Liga", null, 19));
-        
-        // Extra players for variety
-        players.add(new Player(null, "Florian Wirtz", null, List.of("CAM", "LW"), "Bayer Leverkusen", "Germany", "Bundesliga", null, 10));
-        players.add(new Player(null, "Xavi Simons", null, List.of("CAM", "RW"), "RB Leipzig", "Netherlands", "Bundesliga", null, 10));
-        players.add(new Player(null, "Lamine Yamal", null, List.of("RW"), "Barcelona", "Spain", "La Liga", null, 19));
-        players.add(new Player(null, "Alejandro Garnacho", null, List.of("LW", "RW"), "Manchester United", "Argentina", "Premier League", null, 17));
+        if (playersNode != null && playersNode.isArray()) {
+            int count = 0;
+            for (JsonNode playerNode : playersNode) {
+                Player player = parsePlayer(playerNode);
+                if (player != null) {
+                    players.add(player);
+                    count++;
+                }
+            }
+            logger.info("Loaded {} players from {}", count, file.getName());
+        }
+    }
+    
+    private Player parsePlayer(JsonNode node) {
+        try {
+            String id = node.has("id") ? node.get("id").asText() : null;
+            String name = node.get("name").asText();
+            String shortName = node.has("shortName") ? node.get("shortName").asText() : null;
+            
+            List<String> positions = new ArrayList<>();
+            if (node.has("primaryPosition")) {
+                positions.add(node.get("primaryPosition").asText());
+            }
+            if (node.has("secondaryPositions") && node.get("secondaryPositions").isArray()) {
+                for (JsonNode pos : node.get("secondaryPositions")) {
+                    positions.add(pos.asText());
+                }
+            }
+            
+            String club = node.has("club") ? node.get("club").asText() : null;
+            String nationality = node.has("nationality") ? node.get("nationality").asText() : null;
+            String league = node.has("league") ? node.get("league").asText() : null;
+            String photoUrl = node.has("photoUrl") && !node.get("photoUrl").isNull() 
+                ? node.get("photoUrl").asText() : null;
+            Integer number = node.has("number") && !node.get("number").isNull() 
+                ? node.get("number").asInt() : null;
+            
+            return new Player(id, name, shortName, positions, club, nationality, league, photoUrl, number);
+            
+        } catch (Exception e) {
+            logger.warn("Failed to parse player: {}", e.getMessage());
+            return null;
+        }
     }
     
     @Cacheable(value = "players", key = "#request.hashCode()")
@@ -112,6 +150,7 @@ public class PlayerService {
         if (query == null || query.isBlank()) return true;
         String q = query.toLowerCase();
         return player.name().toLowerCase().contains(q) ||
+               (player.displayName() != null && player.displayName().toLowerCase().contains(q)) ||
                (player.club() != null && player.club().toLowerCase().contains(q)) ||
                (player.nationality() != null && player.nationality().toLowerCase().contains(q));
     }

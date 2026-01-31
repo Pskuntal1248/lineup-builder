@@ -2,14 +2,15 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #0a0a0f;
 }
 
 .main-content {
   flex: 1;
   display: flex;
-  padding: 16px;
-  gap: 16px;
-  max-height: calc(100vh - 60px);
+  padding: 20px 24px;
+  gap: 24px;
+  max-height: calc(100vh - 64px);
 }
 
 .pitch-container {
@@ -17,18 +18,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-secondary);
-  border-radius: 12px;
-  padding: 20px;
+  background: linear-gradient(180deg, #12121a 0%, #0d0d14 100%);
+  border-radius: 16px;
+  padding: 32px;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .main-content {
     flex-direction: column;
+    padding: 16px;
   }
   
   .pitch-container {
-    min-height: 500px;
+    min-height: 600px;
   }
 }
