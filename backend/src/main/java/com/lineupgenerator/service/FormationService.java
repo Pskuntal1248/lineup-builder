@@ -41,7 +41,6 @@ public class FormationService{
             "attacking"
         ));
         
-        // 4-2-3-1
         formations.put("4-2-3-1", new Formation(
             "4-2-3-1", "4-2-3-1", "4-2-3-1",
             List.of(
@@ -60,7 +59,6 @@ public class FormationService{
             "balanced"
         ));
         
-        // 4-4-2
         formations.put("4-4-2", new Formation(
             "4-4-2", "4-4-2", "4-4-2",
             List.of(

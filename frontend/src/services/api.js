@@ -24,7 +24,6 @@ async function fetchWithTimeout(url, options = {}, timeout = 30000) {
 }
 
 export const api = {
-  // Formations
   async getFormations() {
     return fetchWithTimeout(`${API_BASE}/formations`)
   },
@@ -36,7 +35,6 @@ export const api = {
     return fetchWithTimeout(`${API_BASE}/formations/${id}?${params}`)
   },
   
-  // Players
   async searchPlayers({ query, club, nationality, league, position, page = 0, size = 20 }) {
     const params = new URLSearchParams()
     if (query) params.append('query', query)
@@ -66,7 +64,6 @@ export const api = {
     return fetchWithTimeout(`${API_BASE}/players/leagues`)
   },
   
-  // Export
   async prepareExport(lineup, settings, format = 'png') {
     return fetchWithTimeout(`${API_BASE}/lineup/export`, {
       method: 'POST',
@@ -82,7 +79,6 @@ export const api = {
     })
   },
 
-  // Scraper API - Team Selection and Live Scraping
   async getScrapableLeagues() {
     return fetchWithTimeout(`${SCRAPER_API}/leagues`, {}, 10000)
   },
@@ -102,7 +98,7 @@ export const api = {
         team_name: teamName,
         league_id: leagueId
       })
-    }, 60000) // 60 second timeout for scraping
+    }, 60000)
   },
 
   async clearScraperCache() {

@@ -8,17 +8,13 @@ React application for creating football/soccer lineups with drag-and-drop functi
 - Vite 5
 - Tailwind CSS v4
 - Radix UI Components
-
 ## Local Development
 
 ```bash
-# Install dependencies
 npm install
 
-# Start dev server
 npm run dev
 ```
-
 Open `http://localhost:5173`
 
 ## Build for Production
@@ -85,7 +81,6 @@ frontend/
 ## Features
 
 - 30+ tactical formations
-- Real player search (3,788 players)
 - Drag-and-drop player positioning
 - Custom jersey colors
 - Multiple pitch styles

@@ -11,20 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
 public class ExportController {
     
-    /**
-     * Export endpoint - primarily handles metadata validation.
-     * Actual image generation happens client-side using canvas.
-     * This endpoint can be extended to support server-side rendering if needed.
-     */
     @PostMapping("/export")
     public ResponseEntity<ExportResponse> prepareExport(@RequestBody ExportRequest request) {
-        // Validate request
         if (request.players() == null || request.players().isEmpty()) {
             return ResponseEntity.badRequest()
                 .body(new ExportResponse(false, "No players in lineup", null));
         }
-        
-        // Calculate dimensions based on aspect ratio
+
         int width = request.width();
         int height = request.height();
         
@@ -42,10 +35,6 @@ public class ExportController {
             new ExportMetadata(width, height, request.format())
         ));
     }
-    
-    /**
-     * Endpoint for server-side SVG generation (optional feature).
-     */
     @PostMapping("/export/svg")
     public ResponseEntity<String> exportSvg(@RequestBody ExportRequest request) {
         String svg = generateSvg(request);
@@ -70,7 +59,6 @@ public class ExportController {
             width, height, width, height
         ));
         
-        // Background
         String bgColor = switch (pitchStyle) {
             case "dark" -> "#1a472a";
             case "light" -> "#4a8f4a";
@@ -78,11 +66,7 @@ public class ExportController {
             default -> "#2e7d32";
         };
         svg.append(String.format("<rect width=\"%d\" height=\"%d\" fill=\"%s\"/>", width, height, bgColor));
-        
-        // Pitch markings
         svg.append(generatePitchMarkings(width, height));
-        
-        // Players
         if (request.players() != null) {
             for (var player : request.players()) {
                 double x = player.customX() != null ? player.customX() : 50;
@@ -118,45 +102,31 @@ public class ExportController {
         StringBuilder markings = new StringBuilder();
         String strokeColor = "rgba(255,255,255,0.6)";
         int strokeWidth = 2;
-        
-        // Outer boundary
         int padding = 20;
         markings.append(String.format(
             "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" fill=\"none\" stroke=\"%s\" stroke-width=\"%d\"/>",
             padding, padding, width - 2 * padding, height - 2 * padding, strokeColor, strokeWidth
         ));
-        
-        // Center line
         int centerY = height / 2;
         markings.append(String.format(
             "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke=\"%s\" stroke-width=\"%d\"/>",
             padding, centerY, width - padding, centerY, strokeColor, strokeWidth
         ));
-        
-        // Center circle
         int circleRadius = Math.min(width, height) / 8;
         markings.append(String.format(
             "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" fill=\"none\" stroke=\"%s\" stroke-width=\"%d\"/>",
             width / 2, centerY, circleRadius, strokeColor, strokeWidth
         ));
-        
-        // Center spot
         markings.append(String.format(
             "<circle cx=\"%d\" cy=\"%d\" r=\"4\" fill=\"%s\"/>",
             width / 2, centerY, strokeColor
         ));
-        
-        // Penalty areas
         int penaltyWidth = width / 3;
         int penaltyHeight = height / 6;
-        
-        // Top penalty area
         markings.append(String.format(
             "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" fill=\"none\" stroke=\"%s\" stroke-width=\"%d\"/>",
             (width - penaltyWidth) / 2, padding, penaltyWidth, penaltyHeight, strokeColor, strokeWidth
         ));
-        
-        // Bottom penalty area
         markings.append(String.format(
             "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" fill=\"none\" stroke=\"%s\" stroke-width=\"%d\"/>",
             (width - penaltyWidth) / 2, height - padding - penaltyHeight, penaltyWidth, penaltyHeight, strokeColor, strokeWidth

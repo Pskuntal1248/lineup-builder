@@ -19,7 +19,6 @@ export function useTeamScraper() {
       setLeagues(data.leagues || [])
     } catch (err) {
       setError('Failed to load leagues. Make sure the scraper API is running.')
-      console.error('Error fetching leagues:', err)
     } finally {
       setLoading(false)
     }
@@ -40,7 +39,6 @@ export function useTeamScraper() {
       setSelectedLeague(leagueId)
     } catch (err) {
       setError('Failed to load teams. The league may not be available.')
-      console.error('Error fetching teams:', err)
     } finally {
       setLoading(false)
     }
@@ -66,7 +64,6 @@ export function useTeamScraper() {
     } catch (err) {
       setError('Failed to scrape team. Please try again.')
       setScrapeStatus(null)
-      console.error('Error scraping team:', err)
     } finally {
       setLoading(false)
     }
@@ -78,7 +75,6 @@ export function useTeamScraper() {
       setScrapedPlayers([])
       setScrapeStatus('Cache cleared')
     } catch (err) {
-      console.error('Error clearing cache:', err)
     }
   }, [])
 
@@ -92,7 +88,6 @@ export function useTeamScraper() {
   }, [])
 
   return {
-    // State
     leagues,
     teams,
     scrapedPlayers,
@@ -101,7 +96,6 @@ export function useTeamScraper() {
     loading,
     error,
     scrapeStatus,
-    // Actions
     fetchLeagues,
     fetchTeams,
     scrapeTeam,

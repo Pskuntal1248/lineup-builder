@@ -7,7 +7,7 @@ public record LineupPlayer(
     String displayName,
     String photoUrl,
     Integer number,
-    Double customX,  // For free-drag mode
-    Double customY,  // For free-drag mode
+    Double customX,
+    Double customY,
     String jerseyColor
 ) {}

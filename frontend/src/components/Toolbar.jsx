@@ -2,7 +2,6 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import * as Popover from '@radix-ui/react-popover'
 import { useState } from 'react'
 
-// Extended formation database - 30+ formations without emojis
 const FORMATION_CATEGORIES = [
   {
     name: 'Attacking',
@@ -76,7 +75,6 @@ export default function Toolbar({
 
   return (
     <header className="h-14 bg-[#0c0c0e] border-b border-[#1a1a1f] flex items-center justify-between px-4 shrink-0 z-30">
-      {/* Left: Logo & Toggle */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
@@ -97,7 +95,6 @@ export default function Toolbar({
         </button>
       </div>
 
-      {/* Center: Formation Selector - Compact */}
       <div className="flex items-center gap-2">
         <Popover.Root open={formationOpen} onOpenChange={setFormationOpen}>
           <Popover.Trigger asChild>
@@ -117,7 +114,6 @@ export default function Toolbar({
 
           <Popover.Portal>
             <Popover.Content className="w-[520px] bg-[#0f0f12] border border-[#252529] rounded-xl shadow-2xl z-50 overflow-hidden" sideOffset={8} align="center">
-              {/* Popular */}
               <div className="p-3 border-b border-[#1a1a1f]">
                 <div className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider mb-2">Popular</div>
                 <div className="flex flex-wrap gap-1.5">
@@ -136,7 +132,6 @@ export default function Toolbar({
                 </div>
               </div>
 
-              {/* All Formations */}
               <div className="max-h-[280px] overflow-y-auto p-3">
                 <div className="grid grid-cols-4 gap-3">
                   {FORMATION_CATEGORIES.map(category => (
@@ -161,7 +156,6 @@ export default function Toolbar({
           </Popover.Portal>
         </Popover.Root>
 
-        {/* Quick Toggles */}
         <div className="hidden md:flex items-center gap-1 p-1 bg-[#1a1a1f] rounded-lg border border-[#252529]">
           <ToggleBtn active={settings.showPhotos} onClick={() => onSettingsChange({ showPhotos: !settings.showPhotos })} icon="photo" title="Show Photos" />
           <ToggleBtn active={settings.showNames} onClick={() => onSettingsChange({ showNames: !settings.showNames })} icon="name" title="Show Names" />
@@ -169,7 +163,6 @@ export default function Toolbar({
         </div>
       </div>
 
-      {/* Right: Actions */}
       <div className="flex items-center gap-2">
         <button onClick={onClear} className="h-8 px-3 rounded-lg text-xs font-medium text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-1.5">
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">

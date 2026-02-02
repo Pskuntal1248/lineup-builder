@@ -9,8 +9,6 @@ import com.lineupgenerator.model.Player;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jakarta.annotation.PostConstruct;
 import java.io.File;
@@ -27,7 +25,6 @@ import java.util.stream.Stream;
 @Service
 public class PlayerService {
     
-    private static final Logger logger = LoggerFactory.getLogger(PlayerService.class);
     private static final Pattern DIACRITICS_PATTERN = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     
     private final List<Player> players = new ArrayList<>();
@@ -44,38 +41,27 @@ public class PlayerService {
     private void loadPlayersFromScraperOutput() {
         try {
             Path outputPath = Paths.get(scraperOutputDir).toAbsolutePath();
-            logger.info("Looking for scraped data in: {}", outputPath);
-            
             if (!Files.exists(outputPath)) {
-                logger.warn("Scraper output directory not found: {}", outputPath);
-                logger.info("No scraped data available. Run the scraper first: cd ../scraper && python3 main.py");
                 return;
             }
-            
-            // First try to load all-players.json (combined file)
+
             Path combinedFile = outputPath.resolve("all-players.json");
             if (Files.exists(combinedFile)) {
                 loadFromJsonFile(combinedFile.toFile());
                 return;
             }
-            
-            // Otherwise load individual league files
+
             try (Stream<Path> files = Files.list(outputPath)) {
                 files.filter(p -> p.toString().endsWith(".json"))
                      .forEach(p -> {
                          try {
                              loadFromJsonFile(p.toFile());
                          } catch (Exception e) {
-                             logger.warn("Failed to load {}: {}", p.getFileName(), e.getMessage());
                          }
                      });
             }
-            
-            logger.info("Loaded {} players from scraped data", players.size());
-            
+
         } catch (Exception e) {
-            logger.error("Failed to load players from scraper output: {}", e.getMessage());
-            logger.info("No player data available. Run the scraper: cd ../scraper && python3 main.py");
         }
     }
     
@@ -92,7 +78,6 @@ public class PlayerService {
                     count++;
                 }
             }
-            logger.info("Loaded {} players from {}", count, file.getName());
         }
     }
     
@@ -123,7 +108,6 @@ public class PlayerService {
             return new Player(id, name, shortName, positions, club, nationality, league, photoUrl, number);
             
         } catch (Exception e) {
-            logger.warn("Failed to parse player: {}", e.getMessage());
             return null;
         }
     }
@@ -140,13 +124,12 @@ public class PlayerService {
             .filter(p -> matchesPosition(p, request.position()))
             .collect(Collectors.toList());
         
-        // Sort results by relevance if there's a query
         if (query != null && !query.isBlank()) {
             String normalizedQuery = normalizeString(query.trim());
             filtered.sort((a, b) -> {
                 int scoreA = calculateRelevanceScore(a, normalizedQuery);
                 int scoreB = calculateRelevanceScore(b, normalizedQuery);
-                return scoreB - scoreA; // Higher score first
+                return scoreB - scoreA;
             });
         }
         
@@ -161,38 +144,29 @@ public class PlayerService {
         return SearchResultDTO.of(pageItems, request.page(), request.size(), total);
     }
     
-    /**
-     * Calculate relevance score for sorting search results
-     * Higher score = more relevant match
-     */
     private int calculateRelevanceScore(Player player, String normalizedQuery) {
         String name = normalizeString(player.name());
         String displayName = normalizeString(player.displayName());
         
         int score = 0;
         
-        // Exact name match (highest priority)
         if (name.equals(normalizedQuery) || displayName.equals(normalizedQuery)) {
             score += 1000;
         }
-        
-        // Name starts with query
+
         if (name.startsWith(normalizedQuery) || displayName.startsWith(normalizedQuery)) {
             score += 500;
         }
-        
-        // Last name starts with query (common search pattern)
+
         String[] nameParts = name.split("\\s+");
         if (nameParts.length > 1 && nameParts[nameParts.length - 1].startsWith(normalizedQuery)) {
             score += 400;
         }
-        
-        // Any word in name starts with query
+
         if (matchesStartOfWord(name, normalizedQuery)) {
             score += 300;
         }
-        
-        // Name contains query
+
         if (name.contains(normalizedQuery)) {
             score += 100;
         }
@@ -203,17 +177,14 @@ public class PlayerService {
     private boolean matchesQuery(Player player, String query) {
         if (query == null || query.isBlank()) return true;
         
-        // Normalize and prepare query - remove diacritics and lowercase
         String normalizedQuery = normalizeString(query.trim());
         String[] queryTerms = normalizedQuery.split("\\s+");
-        
-        // Get normalized versions of player data
+
         String normalizedName = normalizeString(player.name());
         String normalizedDisplayName = player.displayName() != null ? normalizeString(player.displayName()) : "";
         String normalizedClub = player.club() != null ? normalizeString(player.club()) : "";
         String normalizedNationality = player.nationality() != null ? normalizeString(player.nationality()) : "";
-        
-        // Check if ALL query terms match (for multi-word searches like "lionel messi")
+
         boolean allTermsMatch = Arrays.stream(queryTerms).allMatch(term ->
             normalizedName.contains(term) ||
             normalizedDisplayName.contains(term) ||
@@ -225,27 +196,17 @@ public class PlayerService {
         
         if (allTermsMatch) return true;
         
-        // Also check the full query as a single string (for partial matches)
         return normalizedName.contains(normalizedQuery) ||
                normalizedDisplayName.contains(normalizedQuery) ||
                normalizedClub.contains(normalizedQuery) ||
                normalizedNationality.contains(normalizedQuery);
     }
-    
-    /**
-     * Normalize string by removing diacritics/accents and converting to lowercase
-     * e.g., "Müller" -> "muller", "Griezmann" -> "griezmann", "Mbappé" -> "mbappe"
-     */
     private String normalizeString(String input) {
         if (input == null) return "";
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         return DIACRITICS_PATTERN.matcher(normalized).replaceAll("").toLowerCase();
     }
     
-    /**
-     * Check if term matches the start of any word in the text
-     * e.g., "sal" matches "Mohamed Salah" because "Salah" starts with "sal"
-     */
     private boolean matchesStartOfWord(String text, String term) {
         if (text == null || text.isEmpty() || term == null || term.isEmpty()) return false;
         String[] words = text.split("\\s+");
@@ -310,20 +271,13 @@ public class PlayerService {
             .toList();
     }
     
-    /**
-     * Get total player count for diagnostics
-     */
     public int getPlayerCount() {
         return players.size();
     }
     
-    /**
-     * Reload players from scraper output (useful after running scraper)
-     */
     public int reloadPlayers() {
         players.clear();
         loadPlayersFromScraperOutput();
-        logger.info("Reloaded {} players", players.size());
         return players.size();
     }
 }

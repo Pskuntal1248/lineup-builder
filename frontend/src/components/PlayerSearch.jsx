@@ -9,7 +9,6 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
   const [hasSearched, setHasSearched] = useState(false)
   const { results, loading, search } = usePlayerSearch()
 
-  // Focus and reset on open
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 50)
@@ -18,7 +17,6 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
     }
   }, [open])
 
-  // Only search when query has at least 1 character
   useEffect(() => {
     if (query.trim().length >= 1) {
       const timeoutId = setTimeout(() => {
@@ -38,7 +36,6 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50" />
         <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-[80vh] bg-[#0c0c0e] border border-[#252529] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden">
-          {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-[#1a1a1f]">
             <Dialog.Title className="text-sm font-semibold text-white flex items-center gap-2">
               Add Player
@@ -55,7 +52,6 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
             </Dialog.Close>
           </div>
           
-          {/* Search Input */}
           <div className="px-4 py-3 border-b border-[#1a1a1f]">
             <div className="relative">
               <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -80,7 +76,6 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
             </div>
           </div>
           
-          {/* Results */}
           <div className="flex-1 overflow-y-auto">
             {query.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
@@ -111,7 +106,6 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
                     className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[#1a1a1f] transition-colors text-left"
                     onClick={() => { onSelect(player); onClose() }}
                   >
-                    {/* Avatar */}
                     <div className="w-10 h-10 rounded-full bg-[#252529] border border-[#333] overflow-hidden shrink-0">
                       {player.photoUrl && !imageErrors.has(player.id) ? (
                         <img src={player.photoUrl} alt="" className="w-full h-full object-cover" onError={() => handleImageError(player.id)} loading="lazy"/>
@@ -119,14 +113,12 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
                         <span className="w-full h-full flex items-center justify-center text-xs font-semibold text-zinc-500">{getInitials(player.name)}</span>
                       )}
                     </div>
-                    
-                    {/* Info */}
+
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-white truncate">{player.name}</div>
                       <div className="text-[11px] text-zinc-500 truncate">{player.club} · {player.nationality}</div>
                     </div>
-                    
-                    {/* Position */}
+
                     {player.positions?.[0] && (
                       <span className="px-1.5 py-0.5 text-[9px] font-semibold bg-[#252529] text-zinc-400 rounded uppercase">{player.positions[0]}</span>
                     )}

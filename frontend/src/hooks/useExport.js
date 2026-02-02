@@ -15,9 +15,8 @@ export function useExport() {
     setError(null)
 
     try {
-      // Get dimensions based on aspect ratio
       const dimensions = getExportDimensions(settings.aspectRatio)
-      
+
       const options = {
         width: dimensions.width,
         height: dimensions.height,
@@ -37,7 +36,6 @@ export function useExport() {
         dataUrl = await toPng(element, options)
       }
 
-      // Download the image
       const link = document.createElement('a')
       link.download = `lineup-${lineup.formationId}-${Date.now()}.${format}`
       link.href = dataUrl
@@ -46,7 +44,6 @@ export function useExport() {
       return dataUrl
     } catch (err) {
       setError(err.message)
-      console.error('Export failed:', err)
     } finally {
       setExporting(false)
     }

@@ -8,6 +8,7 @@ const DEFAULT_SETTINGS = {
   showPhotos: true,
   showNames: true,
   showNumbers: true,
+  showJerseyBody: true,
   showBranding: false,
   aspectRatio: 'portrait',
   flippedHorizontal: false,
@@ -27,14 +28,12 @@ export function useLineup() {
     setLineup(prev => ({
       ...prev,
       formationId,
-      // Keep existing players, they'll be repositioned by formation
       players: prev.players
     }))
   }, [])
 
   const addPlayer = useCallback((player, positionId) => {
     setLineup(prev => {
-      // Remove player from any existing position
       const filteredPlayers = prev.players.filter(p => 
         p.playerId !== player.id && p.positionId !== positionId
       )
@@ -95,7 +94,6 @@ export function useLineup() {
         if (p.playerId === playerId) {
           return { ...p, positionId, customX, customY }
         }
-        // If moving to an occupied position, remove the other player from that position
         if (positionId && p.positionId === positionId) {
           return { ...p, positionId: null }
         }

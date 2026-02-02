@@ -13,12 +13,10 @@ const Pitch = forwardRef(function Pitch({
   const [draggedPlayer, setDraggedPlayer] = useState(null)
   const [dragOverPosition, setDragOverPosition] = useState(null)
 
-  // Get current formation positions
   const currentFormation = useMemo(() => {
     return FORMATIONS[lineup.formationId] || FORMATIONS['4-3-3']
   }, [lineup.formationId])
 
-  // Apply flips if needed
   const positions = useMemo(() => {
     let pos = currentFormation.positions
     if (settings.flippedHorizontal) {
@@ -30,7 +28,6 @@ const Pitch = forwardRef(function Pitch({
     return pos
   }, [currentFormation, settings.flippedHorizontal, settings.flippedVertical])
 
-  // Map players to positions
   const positionedPlayers = useMemo(() => {
     const map = new Map()
     lineup.players.forEach(player => {
@@ -80,12 +77,11 @@ const Pitch = forwardRef(function Pitch({
     setDragOverPosition(null)
   }, [draggedPlayer, positionedPlayers, onSwapPlayers, onPlayerDrop])
 
-  // Calculate aspect ratio dimensions
   const getAspectRatioStyle = () => {
     switch (settings.aspectRatio) {
       case 'portrait':
         return { aspectRatio: '4/5' }
-      default: // square
+      default:
         return { aspectRatio: '1/1' }
     }
   }
@@ -100,14 +96,12 @@ const Pitch = forwardRef(function Pitch({
       }}
       ref={ref}
     >
-      {/* Pitch markings - Corrected Aspect Ratio (FIFA Dimensions) */}
       <svg 
         className="absolute inset-0 w-full h-full" 
         viewBox="0 0 100 100" 
         preserveAspectRatio="none"
         style={{ opacity: 0.9 }}
       >
-        {/* Grass pattern overlay */}
         <defs>
           <pattern id="grassStripes" patternUnits="userSpaceOnUse" width="100" height="5">
             <rect width="100" height="2.5" fill="rgba(255,255,255,0.02)" />
@@ -120,61 +114,41 @@ const Pitch = forwardRef(function Pitch({
           </linearGradient>
         </defs>
         <rect x="0" y="0" width="100" height="100" fill="url(#grassStripes)" />
-        
-        {/* Outer boundary */}
+
         <rect x="3" y="3" width="94" height="94" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
-        
-        {/* Center line (halfway line) */}
+
         <line x1="3" y1="50" x2="97" y2="50" stroke="rgba(255,255,255,0.9)" strokeWidth="0.5" />
-        
-        {/* Center circle - Using Ellipse to correct distortion (rx=13, ry=8.7) */}
+
         <ellipse cx="50" cy="50" rx="13" ry="8.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
-        
-        {/* Center spot */}
+
         <circle cx="50" cy="50" r="0.6" fill="rgba(255,255,255,0.95)" />
-        
-        {/* === TOP HALF === */}
-        
-        {/* Penalty area */}
+
         <rect x="20.35" y="3" width="59.3" height="15.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
-        
-        {/* Goal area */}
+
         <rect x="36.5" y="3" width="27" height="5.2" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
-        
-        {/* Top goal */}
+
         <rect x="44.6" y="0" width="10.8" height="3" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5" rx="0.3" />
-        
-        {/* Penalty spot */}
+
         <circle cx="50" cy="13.5" r="0.5" fill="rgba(255,255,255,0.95)" />
-        
-        {/* Penalty arc - Corrected coordinates for elliptical arc */}
+
         <path d="M 39.6 18.7 A 13 8.7 0 0 0 60.4 18.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
-        
-        {/* === BOTTOM HALF === */}
-        
-        {/* Penalty area */}
+
         <rect x="20.35" y="81.3" width="59.3" height="15.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
-        
-        {/* Goal area */}
+
         <rect x="36.5" y="91.8" width="27" height="5.2" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
-        
-        {/* Bottom goal */}
+
         <rect x="44.6" y="97" width="10.8" height="3" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5" rx="0.3" />
-        
-        {/* Penalty spot */}
+
         <circle cx="50" cy="86.5" r="0.5" fill="rgba(255,255,255,0.95)" />
-        
-        {/* Penalty arc */}
+
         <path d="M 39.6 81.3 A 13 8.7 0 0 1 60.4 81.3" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
-        
-        {/* Corner arcs - Corrected to be elliptical (rx=1.5, ry=1) */}
+
         <path d="M 3 4 A 1.5 1 0 0 0 4.5 3" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
         <path d="M 95.5 3 A 1.5 1 0 0 0 97 4" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
         <path d="M 3 96 A 1.5 1 0 0 1 4.5 97" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
         <path d="M 95.5 97 A 1.5 1 0 0 1 97 96" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
       </svg>
 
-      {/* Position markers */}
       {positions.map(position => {
         const player = positionedPlayers.get(position.id)
         const isSelected = selectedPosition === position.id
@@ -240,7 +214,6 @@ const Pitch = forwardRef(function Pitch({
         )
       })}
 
-      {/* Branding Watermark */}
       {settings.showBranding && (
         <div className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/40 backdrop-blur-md border border-white/10">
           <img src="/favicon-32x32.png" alt="FootyBuilder" className="w-4 h-4 rounded-full" />
@@ -251,9 +224,7 @@ const Pitch = forwardRef(function Pitch({
   )
 })
 
-// Comprehensive formations data - all major tactical systems
 const FORMATIONS = {
-  // === ATTACKING ===
   '4-3-3': {
     id: '4-3-3',
     positions: [
@@ -335,7 +306,6 @@ const FORMATIONS = {
     ]
   },
 
-  // === BALANCED ===
   '4-2-3-1': {
     id: '4-2-3-1',
     positions: [
@@ -433,7 +403,6 @@ const FORMATIONS = {
     ]
   },
 
-  // === DEFENSIVE ===
   '5-4-1': {
     id: '5-4-1',
     positions: [
@@ -515,7 +484,6 @@ const FORMATIONS = {
     ]
   },
 
-  // === MODERN ===
   '4-2-2-2': {
     id: '4-2-2-2',
     positions: [
@@ -594,6 +562,150 @@ const FORMATIONS = {
       { id: 'rm', label: 'RM', x: 85, y: 52 },
       { id: 'ss', label: 'SS', x: 50, y: 35 },
       { id: 'st', label: 'ST', x: 50, y: 18 }
+    ]
+  },
+  '4-3-3-holding': {
+    id: '4-3-3-holding',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lb', label: 'LB', x: 15, y: 75 },
+      { id: 'lcb', label: 'CB', x: 35, y: 78 },
+      { id: 'rcb', label: 'CB', x: 65, y: 78 },
+      { id: 'rb', label: 'RB', x: 85, y: 75 },
+      { id: 'cdm', label: 'CDM', x: 50, y: 60 },
+      { id: 'lcm', label: 'CM', x: 32, y: 45 },
+      { id: 'rcm', label: 'CM', x: 68, y: 45 },
+      { id: 'lw', label: 'LW', x: 18, y: 28 },
+      { id: 'st', label: 'ST', x: 50, y: 18 },
+      { id: 'rw', label: 'RW', x: 82, y: 28 }
+    ]
+  },
+  '3-4-3-diamond': {
+    id: '3-4-3-diamond',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lcb', label: 'CB', x: 28, y: 78 },
+      { id: 'cb', label: 'CB', x: 50, y: 80 },
+      { id: 'rcb', label: 'CB', x: 72, y: 78 },
+      { id: 'cdm', label: 'CDM', x: 50, y: 62 },
+      { id: 'lcm', label: 'CM', x: 25, y: 48 },
+      { id: 'rcm', label: 'CM', x: 75, y: 48 },
+      { id: 'cam', label: 'CAM', x: 50, y: 38 },
+      { id: 'lw', label: 'LW', x: 20, y: 25 },
+      { id: 'st', label: 'ST', x: 50, y: 18 },
+      { id: 'rw', label: 'RW', x: 80, y: 25 }
+    ]
+  },
+  '4-1-2-1-2-narrow': {
+    id: '4-1-2-1-2-narrow',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lb', label: 'LB', x: 15, y: 75 },
+      { id: 'lcb', label: 'CB', x: 35, y: 78 },
+      { id: 'rcb', label: 'CB', x: 65, y: 78 },
+      { id: 'rb', label: 'RB', x: 85, y: 75 },
+      { id: 'cdm', label: 'CDM', x: 50, y: 62 },
+      { id: 'lcm', label: 'CM', x: 38, y: 48 },
+      { id: 'rcm', label: 'CM', x: 62, y: 48 },
+      { id: 'cam', label: 'CAM', x: 50, y: 35 },
+      { id: 'lst', label: 'ST', x: 42, y: 20 },
+      { id: 'rst', label: 'ST', x: 58, y: 20 }
+    ]
+  },
+  '4-4-2-flat': {
+    id: '4-4-2-flat',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lb', label: 'LB', x: 15, y: 75 },
+      { id: 'lcb', label: 'CB', x: 35, y: 78 },
+      { id: 'rcb', label: 'CB', x: 65, y: 78 },
+      { id: 'rb', label: 'RB', x: 85, y: 75 },
+      { id: 'lm', label: 'LM', x: 15, y: 50 },
+      { id: 'lcm', label: 'CM', x: 38, y: 50 },
+      { id: 'rcm', label: 'CM', x: 62, y: 50 },
+      { id: 'rm', label: 'RM', x: 85, y: 50 },
+      { id: 'lst', label: 'ST', x: 38, y: 22 },
+      { id: 'rst', label: 'ST', x: 62, y: 22 }
+    ]
+  },
+  '5-2-1-2': {
+    id: '5-2-1-2',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lwb', label: 'LWB', x: 10, y: 65 },
+      { id: 'lcb', label: 'CB', x: 28, y: 78 },
+      { id: 'cb', label: 'CB', x: 50, y: 80 },
+      { id: 'rcb', label: 'CB', x: 72, y: 78 },
+      { id: 'rwb', label: 'RWB', x: 90, y: 65 },
+      { id: 'lcm', label: 'CM', x: 35, y: 52 },
+      { id: 'rcm', label: 'CM', x: 65, y: 52 },
+      { id: 'cam', label: 'CAM', x: 50, y: 38 },
+      { id: 'lst', label: 'ST', x: 38, y: 22 },
+      { id: 'rst', label: 'ST', x: 62, y: 22 }
+    ]
+  },
+  '4-4-1-1-defensive': {
+    id: '4-4-1-1-defensive',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lb', label: 'LB', x: 15, y: 75 },
+      { id: 'lcb', label: 'CB', x: 35, y: 78 },
+      { id: 'rcb', label: 'CB', x: 65, y: 78 },
+      { id: 'rb', label: 'RB', x: 85, y: 75 },
+      { id: 'lm', label: 'LM', x: 15, y: 55 },
+      { id: 'lcm', label: 'CM', x: 38, y: 58 },
+      { id: 'rcm', label: 'CM', x: 62, y: 58 },
+      { id: 'rm', label: 'RM', x: 85, y: 55 },
+      { id: 'ss', label: 'SS', x: 50, y: 38 },
+      { id: 'st', label: 'ST', x: 50, y: 20 }
+    ]
+  },
+  '4-2-1-3': {
+    id: '4-2-1-3',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lb', label: 'LB', x: 15, y: 75 },
+      { id: 'lcb', label: 'CB', x: 35, y: 78 },
+      { id: 'rcb', label: 'CB', x: 65, y: 78 },
+      { id: 'rb', label: 'RB', x: 85, y: 75 },
+      { id: 'ldm', label: 'CDM', x: 35, y: 58 },
+      { id: 'rdm', label: 'CDM', x: 65, y: 58 },
+      { id: 'cam', label: 'CAM', x: 50, y: 40 },
+      { id: 'lw', label: 'LW', x: 18, y: 25 },
+      { id: 'st', label: 'ST', x: 50, y: 18 },
+      { id: 'rw', label: 'RW', x: 82, y: 25 }
+    ]
+  },
+  '3-2-4-1': {
+    id: '3-2-4-1',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lcb', label: 'CB', x: 28, y: 78 },
+      { id: 'cb', label: 'CB', x: 50, y: 80 },
+      { id: 'rcb', label: 'CB', x: 72, y: 78 },
+      { id: 'ldm', label: 'CDM', x: 38, y: 62 },
+      { id: 'rdm', label: 'CDM', x: 62, y: 62 },
+      { id: 'lm', label: 'LM', x: 12, y: 42 },
+      { id: 'lcam', label: 'CAM', x: 35, y: 42 },
+      { id: 'rcam', label: 'CAM', x: 65, y: 42 },
+      { id: 'rm', label: 'RM', x: 88, y: 42 },
+      { id: 'st', label: 'ST', x: 50, y: 18 }
+    ]
+  },
+  '4-3-1-2': {
+    id: '4-3-1-2',
+    positions: [
+      { id: 'gk', label: 'GK', x: 50, y: 92 },
+      { id: 'lb', label: 'LB', x: 15, y: 75 },
+      { id: 'lcb', label: 'CB', x: 35, y: 78 },
+      { id: 'rcb', label: 'CB', x: 65, y: 78 },
+      { id: 'rb', label: 'RB', x: 85, y: 75 },
+      { id: 'lcm', label: 'CM', x: 28, y: 55 },
+      { id: 'cm', label: 'CM', x: 50, y: 58 },
+      { id: 'rcm', label: 'CM', x: 72, y: 55 },
+      { id: 'cam', label: 'CAM', x: 50, y: 38 },
+      { id: 'lst', label: 'ST', x: 38, y: 20 },
+      { id: 'rst', label: 'ST', x: 62, y: 20 }
     ]
   }
 }

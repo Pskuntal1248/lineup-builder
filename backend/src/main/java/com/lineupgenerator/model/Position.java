@@ -3,9 +3,9 @@ package com.lineupgenerator.model;
 public record Position(
     String id,
     String label,
-    double x,  // 0-100 percentage from left
-    double y,  // 0-100 percentage from top (attacking direction)
-    String role // Optional role label (e.g., "Inverted Winger", "False 9")
+    double x,
+    double y,
+    String role
 ) {
     public Position(String id, String label, double x, double y) {
         this(id, label, x, y, null);

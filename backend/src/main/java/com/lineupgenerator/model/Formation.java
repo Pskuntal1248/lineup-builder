@@ -7,7 +7,7 @@ public record Formation(
     String name,
     String displayName,
     List<Position> positions,
-    String category // "defensive", "balanced", "attacking"
+    String category
 ) {
     public Formation flipHorizontal() {
         return new Formation(

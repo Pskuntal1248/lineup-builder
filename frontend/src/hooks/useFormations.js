@@ -13,7 +13,6 @@ export function useFormations() {
         setFormations(data)
       } catch (err) {
         setError(err.message)
-        // Use fallback formations
         setFormations(FALLBACK_FORMATIONS)
       } finally {
         setLoading(false)
@@ -26,7 +25,6 @@ export function useFormations() {
   return { formations, loading, error }
 }
 
-// Fallback formations if API is unavailable
 const FALLBACK_FORMATIONS = [
   {
     id: '4-3-3',

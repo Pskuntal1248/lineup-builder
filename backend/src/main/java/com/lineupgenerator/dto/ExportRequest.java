@@ -15,7 +15,7 @@ public record ExportRequest(
     public ExportRequest {
         if (format == null) format = "png";
         if (width <= 0) width = 1080;
-        if (height <= 0) height = 1350; // Default portrait
+        if (height <= 0) height = 1350;
         if (settings == null) settings = LineupSettings.defaults();
     }
 }

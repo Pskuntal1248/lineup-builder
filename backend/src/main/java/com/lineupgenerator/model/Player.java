@@ -66,7 +66,6 @@ public class Player {
         if (fullName == null || fullName.isBlank()) return "";
         String[] parts = fullName.trim().split("\\s+");
         if (parts.length == 1) return parts[0];
-        // Return last name for display, truncate if too long
         String lastName = parts[parts.length - 1];
         return lastName.length() > 12 ? lastName.substring(0, 11) + "." : lastName;
     }

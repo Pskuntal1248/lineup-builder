@@ -18,7 +18,6 @@ export default function Sidebar({ settings, onSettingsChange, isOpen }) {
   return (
     <aside className={`bg-[#0c0c0e] border-r border-[#1a1a1f] flex flex-col shrink-0 transition-all duration-200 overflow-hidden ${isOpen ? 'w-60' : 'w-0 border-0'}`}>
       <Tabs.Root defaultValue="style" className="flex flex-col h-full">
-        {/* Tabs */}
         <Tabs.List className="flex p-1.5 gap-1 border-b border-[#1a1a1f] shrink-0">
           <Tabs.Trigger value="style" className="flex-1 py-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-500 rounded-md transition-colors data-[state=active]:bg-[#1a1a1f] data-[state=active]:text-white">
             Style
@@ -28,9 +27,7 @@ export default function Sidebar({ settings, onSettingsChange, isOpen }) {
           </Tabs.Trigger>
         </Tabs.List>
 
-        {/* Style Tab */}
         <Tabs.Content value="style" className="flex-1 overflow-y-auto p-3 space-y-5">
-          {/* Pitch Style */}
           <Section title="Pitch Style">
             <div className="grid grid-cols-2 gap-1.5">
               {pitchStyles.map(style => (
@@ -51,7 +48,6 @@ export default function Sidebar({ settings, onSettingsChange, isOpen }) {
             </div>
           </Section>
 
-          {/* Jersey Color */}
           <Section title="Jersey Color">
             <div className="flex flex-wrap gap-1.5">
               {jerseyColors.map(color => (
@@ -68,7 +64,6 @@ export default function Sidebar({ settings, onSettingsChange, isOpen }) {
             </div>
           </Section>
 
-          {/* Orientation */}
           <Section title="Orientation">
             <div className="grid grid-cols-2 gap-1.5">
               <FlipBtn active={settings.flippedHorizontal} onClick={() => onSettingsChange({ flippedHorizontal: !settings.flippedHorizontal })} label="Horizontal" horizontal />
@@ -77,13 +72,13 @@ export default function Sidebar({ settings, onSettingsChange, isOpen }) {
           </Section>
         </Tabs.Content>
 
-        {/* Display Tab */}
         <Tabs.Content value="display" className="flex-1 overflow-y-auto p-3 space-y-4">
           <Section title="Player Display">
             <div className="space-y-1">
               <ToggleRow label="Show Photos" checked={settings.showPhotos} onChange={(v) => onSettingsChange({ showPhotos: v })} />
               <ToggleRow label="Show Names" checked={settings.showNames} onChange={(v) => onSettingsChange({ showNames: v })} />
               <ToggleRow label="Show Numbers" checked={settings.showNumbers} onChange={(v) => onSettingsChange({ showNumbers: v })} />
+              <ToggleRow label="Show Jersey Body" checked={settings.showJerseyBody} onChange={(v) => onSettingsChange({ showJerseyBody: v })} />
             </div>
           </Section>
           <Section title="Export">
