@@ -16,6 +16,9 @@ const PlayerNode = memo(function PlayerNode({
 
   const showPhoto = settings.showPhotos && player.photoUrl && !imageError
 
+  // Determine if color is a gradient
+  const isGradient = jerseyColor && jerseyColor.includes('gradient')
+
   return (
     <div
       className={`flex flex-col items-center gap-0.5 cursor-grab select-none ${isDragging ? 'opacity-40' : ''}`}
@@ -25,12 +28,45 @@ const PlayerNode = memo(function PlayerNode({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Avatar Container */}
+      {/* Player Container with Jersey Body */}
       <div className="relative">
-        {/* Main Circle */}
+        {/* Jersey Body Shape */}
         <div 
-          className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 border-white shadow-lg overflow-hidden transition-transform duration-150 ${hovered ? 'scale-110' : ''}`}
-          style={{ backgroundColor: showPhoto ? '#1a1a1f' : jerseyColor }}
+          className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-5 md:w-9 md:h-6 rounded-b-lg transition-transform duration-150 ${hovered ? 'scale-110' : ''}`}
+          style={{ 
+            background: isGradient ? jerseyColor : jerseyColor,
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          }}
+        >
+          {/* Jersey collar detail */}
+          <div 
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-1.5 rounded-b-sm"
+            style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+          />
+        </div>
+
+        {/* Jersey Sleeves */}
+        <div 
+          className={`absolute top-5 -left-1.5 w-2.5 h-3 md:w-3 md:h-3.5 rounded-b-md rounded-l-md transition-transform duration-150 ${hovered ? 'scale-110' : ''}`}
+          style={{ 
+            background: isGradient ? jerseyColor : jerseyColor,
+            transformOrigin: 'right top',
+            transform: hovered ? 'scale(1.1) rotate(-10deg)' : 'rotate(-10deg)'
+          }}
+        />
+        <div 
+          className={`absolute top-5 -right-1.5 w-2.5 h-3 md:w-3 md:h-3.5 rounded-b-md rounded-r-md transition-transform duration-150 ${hovered ? 'scale-110' : ''}`}
+          style={{ 
+            background: isGradient ? jerseyColor : jerseyColor,
+            transformOrigin: 'left top',
+            transform: hovered ? 'scale(1.1) rotate(10deg)' : 'rotate(10deg)'
+          }}
+        />
+
+        {/* Head Circle */}
+        <div 
+          className={`relative w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 border-white shadow-lg overflow-hidden transition-transform duration-150 z-10 ${hovered ? 'scale-110' : ''}`}
+          style={{ backgroundColor: showPhoto ? '#1a1a1f' : '#f5d0a9' }}
         >
           {showPhoto ? (
             <img 
@@ -40,16 +76,31 @@ const PlayerNode = memo(function PlayerNode({
               onError={() => setImageError(true)}
               loading="lazy"
             />
-          ) : settings.showNumbers && player.number ? (
-            <span className="text-xs md:text-sm font-bold text-white" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>{player.number}</span>
           ) : (
-            <span className="text-[10px] font-bold text-white" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>{getInitials(player.name)}</span>
+            /* Default face/head when no photo */
+            <div className="w-full h-full bg-gradient-to-b from-[#f5d0a9] to-[#e8b88a] flex items-center justify-center">
+              <span className="text-[10px] font-bold text-[#5a4030]">{getInitials(player.name)}</span>
+            </div>
           )}
         </div>
+
+        {/* Jersey Number Badge */}
+        {settings.showNumbers && player.number && (
+          <div 
+            className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] font-bold text-white z-20"
+            style={{ 
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              minWidth: '16px',
+              textAlign: 'center'
+            }}
+          >
+            {player.number}
+          </div>
+        )}
         
-        {/* Remove Button - Always visible on hover with better styling */}
+        {/* Remove Button */}
         <button 
-          className={`absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg border border-white transition-all duration-150 hover:bg-red-600 hover:scale-110 ${hovered ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+          className={`absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg border border-white transition-all duration-150 hover:bg-red-600 hover:scale-110 z-20 ${hovered ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
           onClick={(e) => {
             e.stopPropagation()
             e.preventDefault()
@@ -65,7 +116,10 @@ const PlayerNode = memo(function PlayerNode({
 
       {/* Name Label */}
       {settings.showNames && (
-        <div className="max-w-[60px] md:max-w-[70px] px-1 py-0.5 bg-black/90 rounded text-[8px] md:text-[9px] font-semibold text-white text-center truncate shadow-md" title={player.name}>
+        <div 
+          className="max-w-[60px] md:max-w-[70px] px-1 py-0.5 bg-black/90 rounded text-[8px] md:text-[9px] font-semibold text-white text-center truncate shadow-md mt-1" 
+          title={player.name}
+        >
           {displayName}
         </div>
       )}

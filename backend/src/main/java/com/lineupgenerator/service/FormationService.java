@@ -1,14 +1,19 @@
 package com.lineupgenerator.service;
 
-import com.lineupgenerator.model.Formation;
-import com.lineupgenerator.model.Position;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import com.lineupgenerator.model.Formation;
+import com.lineupgenerator.model.Position;
 
 @Service
-public class FormationService {
+public class FormationService{
     
     private final Map<String, Formation> formations = new LinkedHashMap<>();
     
@@ -17,7 +22,7 @@ public class FormationService {
     }
     
     private void initializeFormations() {
-        // 4-3-3
+       
         formations.put("4-3-3", new Formation(
             "4-3-3", "4-3-3", "4-3-3",
             List.of(
@@ -73,8 +78,6 @@ public class FormationService {
             ),
             "balanced"
         ));
-        
-        // 3-5-2
         formations.put("3-5-2", new Formation(
             "3-5-2", "3-5-2", "3-5-2",
             List.of(
@@ -92,8 +95,6 @@ public class FormationService {
             ),
             "balanced"
         ));
-        
-        // 4-1-4-1
         formations.put("4-1-4-1", new Formation(
             "4-1-4-1", "4-1-4-1", "4-1-4-1",
             List.of(
@@ -111,8 +112,6 @@ public class FormationService {
             ),
             "defensive"
         ));
-        
-        // 5-3-2
         formations.put("5-3-2", new Formation(
             "5-3-2", "5-3-2", "5-3-2",
             List.of(
@@ -130,8 +129,6 @@ public class FormationService {
             ),
             "defensive"
         ));
-        
-        // 4-3-1-2
         formations.put("4-3-1-2", new Formation(
             "4-3-1-2", "4-3-1-2", "4-3-1-2",
             List.of(
@@ -149,8 +146,6 @@ public class FormationService {
             ),
             "attacking"
         ));
-        
-        // 3-4-3
         formations.put("3-4-3", new Formation(
             "3-4-3", "3-4-3", "3-4-3",
             List.of(
@@ -169,16 +164,13 @@ public class FormationService {
             "attacking"
         ));
     }
-    
     @Cacheable("formations")
     public List<Formation> getAllFormations() {
         return new ArrayList<>(formations.values());
     }
-    
     public Optional<Formation> getFormation(String id) {
         return Optional.ofNullable(formations.get(id));
     }
-    
     public Optional<Formation> getFormation(String id, boolean flipH, boolean flipV) {
         return getFormation(id).map(f -> {
             Formation result = f;
@@ -186,8 +178,7 @@ public class FormationService {
             if (flipV) result = result.flipVertical();
             return result;
         });
-    }
-    
+    }   
     public List<Formation> getByCategory(String category) {
         return formations.values().stream()
             .filter(f -> f.category().equalsIgnoreCase(category))

@@ -1,13 +1,20 @@
 package com.lineupgenerator.controller;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.lineupgenerator.dto.PlayerDTO;
 import com.lineupgenerator.dto.PlayerSearchRequest;
 import com.lineupgenerator.dto.SearchResultDTO;
 import com.lineupgenerator.service.PlayerService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/players")
@@ -57,5 +64,15 @@ public class PlayerController {
     @GetMapping("/leagues")
     public ResponseEntity<List<String>> getLeagues() {
         return ResponseEntity.ok(playerService.getLeagues());
+    }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getPlayerCount() {
+        return ResponseEntity.ok(playerService.getPlayerCount());
+    }
+    
+    @PostMapping("/reload")
+    public ResponseEntity<Integer> reloadPlayers() {
+        return ResponseEntity.ok(playerService.reloadPlayers());
     }
 }

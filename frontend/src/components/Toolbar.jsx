@@ -79,13 +79,10 @@ export default function Toolbar({
       {/* Left: Logo & Toggle */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center">
-            <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <circle cx="12" cy="12" r="9"/>
-              <path d="M12 3v6M12 15v6M3 12h6M15 12h6"/>
-            </svg>
+          <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
+            <img src="/favicon-32x32.png" alt="FootyBuilder" className="w-full h-full object-cover rounded-full" />
           </div>
-          <span className="text-sm font-semibold text-white hidden sm:block">LineupLab</span>
+          <span className="text-sm font-semibold text-white hidden sm:block">FootyBuilder</span>
         </div>
 
         <div className="h-5 w-px bg-[#252529]" />

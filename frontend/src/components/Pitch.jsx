@@ -85,8 +85,6 @@ const Pitch = forwardRef(function Pitch({
     switch (settings.aspectRatio) {
       case 'portrait':
         return { aspectRatio: '4/5' }
-      case 'landscape':
-        return { aspectRatio: '16/9' }
       default: // square
         return { aspectRatio: '1/1' }
     }
@@ -102,7 +100,7 @@ const Pitch = forwardRef(function Pitch({
       }}
       ref={ref}
     >
-      {/* Pitch markings - FIFA Standard proportions scaled to 100x100 viewBox */}
+      {/* Pitch markings - Corrected Aspect Ratio (FIFA Dimensions) */}
       <svg 
         className="absolute inset-0 w-full h-full" 
         viewBox="0 0 100 100" 
@@ -123,55 +121,57 @@ const Pitch = forwardRef(function Pitch({
         </defs>
         <rect x="0" y="0" width="100" height="100" fill="url(#grassStripes)" />
         
-        {/* Outer boundary - 3% padding from edges */}
-        <rect x="3" y="3" width="94" height="94" fill="none" stroke="url(#lineGradient)" strokeWidth="0.4" />
+        {/* Outer boundary */}
+        <rect x="3" y="3" width="94" height="94" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
         
         {/* Center line (halfway line) */}
-        <line x1="3" y1="50" x2="97" y2="50" stroke="url(#lineGradient)" strokeWidth="0.3" />
+        <line x1="3" y1="50" x2="97" y2="50" stroke="rgba(255,255,255,0.9)" strokeWidth="0.5" />
         
-        {/* Center circle - ~13.5% of width (9.15/68) */}
-        <circle cx="50" cy="50" r="13" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
+        {/* Center circle - Using Ellipse to correct distortion (rx=13, ry=8.7) */}
+        <ellipse cx="50" cy="50" rx="13" ry="8.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
         
         {/* Center spot */}
         <circle cx="50" cy="50" r="0.6" fill="rgba(255,255,255,0.95)" />
         
-        {/* TOP HALF */}
-        {/* Penalty area - 59.3% width (40.32/68), 15.7% height (16.5/105) */}
-        <rect x="20.35" y="3" width="59.3" height="15.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
+        {/* === TOP HALF === */}
         
-        {/* Goal area - 27% width (18.32/68), 5.2% height (5.5/105) */}
-        <rect x="36.5" y="3" width="27" height="5.2" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
-        
-        {/* Top goal - 10.8% width (7.32/68) */}
-        <rect x="44.6" y="0" width="10.8" height="3" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.3" rx="0.3" />
-        
-        {/* Penalty spot - 10.5% from goal (11/105) */}
-        <circle cx="50" cy="13.5" r="0.5" fill="rgba(255,255,255,0.95)" />
-        
-        {/* Penalty arc - arc from penalty spot outside penalty area */}
-        <path d="M 37 18.7 A 13 13 0 0 0 63 18.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
-        
-        {/* BOTTOM HALF */}
         {/* Penalty area */}
-        <rect x="20.35" y="81.3" width="59.3" height="15.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
+        <rect x="20.35" y="3" width="59.3" height="15.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
         
         {/* Goal area */}
-        <rect x="36.5" y="91.8" width="27" height="5.2" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
+        <rect x="36.5" y="3" width="27" height="5.2" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
+        
+        {/* Top goal */}
+        <rect x="44.6" y="0" width="10.8" height="3" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5" rx="0.3" />
+        
+        {/* Penalty spot */}
+        <circle cx="50" cy="13.5" r="0.5" fill="rgba(255,255,255,0.95)" />
+        
+        {/* Penalty arc - Corrected coordinates for elliptical arc */}
+        <path d="M 39.6 18.7 A 13 8.7 0 0 0 60.4 18.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
+        
+        {/* === BOTTOM HALF === */}
+        
+        {/* Penalty area */}
+        <rect x="20.35" y="81.3" width="59.3" height="15.7" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
+        
+        {/* Goal area */}
+        <rect x="36.5" y="91.8" width="27" height="5.2" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
         
         {/* Bottom goal */}
-        <rect x="44.6" y="97" width="10.8" height="3" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.3" rx="0.3" />
+        <rect x="44.6" y="97" width="10.8" height="3" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.5" rx="0.3" />
         
         {/* Penalty spot */}
         <circle cx="50" cy="86.5" r="0.5" fill="rgba(255,255,255,0.95)" />
         
         {/* Penalty arc */}
-        <path d="M 37 81.3 A 13 13 0 0 1 63 81.3" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
+        <path d="M 39.6 81.3 A 13 8.7 0 0 1 60.4 81.3" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
         
-        {/* Corner arcs - ~1.5% radius (1/68) */}
-        <path d="M 3 4.5 A 1.5 1.5 0 0 0 4.5 3" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
-        <path d="M 95.5 3 A 1.5 1.5 0 0 0 97 4.5" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
-        <path d="M 3 95.5 A 1.5 1.5 0 0 1 4.5 97" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
-        <path d="M 95.5 97 A 1.5 1.5 0 0 1 97 95.5" fill="none" stroke="url(#lineGradient)" strokeWidth="0.3" />
+        {/* Corner arcs - Corrected to be elliptical (rx=1.5, ry=1) */}
+        <path d="M 3 4 A 1.5 1 0 0 0 4.5 3" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
+        <path d="M 95.5 3 A 1.5 1 0 0 0 97 4" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
+        <path d="M 3 96 A 1.5 1 0 0 1 4.5 97" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
+        <path d="M 95.5 97 A 1.5 1 0 0 1 97 96" fill="none" stroke="url(#lineGradient)" strokeWidth="0.5" />
       </svg>
 
       {/* Position markers */}
@@ -239,6 +239,14 @@ const Pitch = forwardRef(function Pitch({
           </div>
         )
       })}
+
+      {/* Branding Watermark */}
+      {settings.showBranding && (
+        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/40 backdrop-blur-md border border-white/10">
+          <img src="/favicon-32x32.png" alt="FootyBuilder" className="w-4 h-4 rounded-full" />
+          <span className="text-[10px] font-semibold text-white/90 tracking-wide">FootyBuilder</span>
+        </div>
+      )}
     </div>
   )
 })

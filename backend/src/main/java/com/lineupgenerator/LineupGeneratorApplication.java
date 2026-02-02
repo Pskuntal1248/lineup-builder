@@ -6,8 +6,8 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @EnableCaching
-public class LineupGeneratorApplication {
-    public static void main(String[] args) {
+public class LineupGeneratorApplication{
+    public static void main(String[] args){
         SpringApplication.run(LineupGeneratorApplication.class, args);
     }
 }

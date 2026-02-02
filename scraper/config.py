@@ -98,7 +98,7 @@ FBREF_POSITION_MAP: Dict[str, str] = {
 }
 
 # League configurations for Transfermarkt
-# Season ID: 2025 = 2025-26 season (updated Feb/Sept for transfer windows)
+# Season ID: 2025 = 2025-26 season (Transfermarkt uses starting year)
 # Update Schedule:
 #   - January/February: After winter transfer window closes
 #   - September: After summer transfer window closes

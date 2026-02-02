@@ -54,8 +54,7 @@ function App() {
   // Aspect ratio display info
   const aspectRatioInfo = {
     square: { label: 'Square', ratio: '1:1', icon: '◼' },
-    portrait: { label: 'Portrait', ratio: '4:5', icon: '▮' },
-    landscape: { label: 'Landscape', ratio: '16:9', icon: '▬' }
+    portrait: { label: 'Portrait', ratio: '4:5', icon: '▮' }
   }
 
   return (

@@ -90,7 +90,8 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
                   </svg>
                 </div>
                 <p className="text-zinc-500 text-xs">Start typing to search players</p>
-                <p className="text-zinc-600 text-[10px] mt-1">3,700+ players from top 5 leagues</p>
+                <p className="text-zinc-600 text-[10px] mt-1">2,500+ players from top 5 leagues</p>
+                <p className="text-zinc-600 text-[10px] mt-0.5">Search by name, club, or nationality</p>
               </div>
             ) : results.length === 0 && hasSearched && !loading ? (
               <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
@@ -100,6 +101,7 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
                   </svg>
                 </div>
                 <p className="text-zinc-500 text-xs">No players found for "{query}"</p>
+                <p className="text-zinc-600 text-[10px] mt-1">Try searching by name, club, or nationality</p>
               </div>
             ) : (
               <div className="divide-y divide-[#1a1a1f]">

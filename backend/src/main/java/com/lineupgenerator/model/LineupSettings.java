@@ -1,13 +1,13 @@
 package com.lineupgenerator.model;
 
 public record LineupSettings(
-    String pitchStyle,      // "light", "dark", "grass", "minimal"
-    String jerseyColor,     // Hex color
+    String pitchStyle,     
+    String jerseyColor,    
     boolean showPhotos,
     boolean showNames,
     boolean showNumbers,
     boolean showBranding,
-    String aspectRatio,     // "square", "portrait", "landscape"
+    String aspectRatio,   
     boolean flippedHorizontal,
     boolean flippedVertical
 ) {

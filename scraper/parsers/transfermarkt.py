@@ -72,9 +72,9 @@ class TransfermarktParser:
     
     def _convert_to_squad_url(self, club_url: str) -> str:
         """Convert club URL to squad/kader URL."""
-        # Example: /fc-arsenal/startseite/verein/11 -> /fc-arsenal/kader/verein/11/saison_id/2024
+        # Example: /fc-arsenal/startseite/verein/11 -> /fc-arsenal/kader/verein/11/saison_id/2025
         if "/startseite/" in club_url:
-            return club_url.replace("/startseite/", "/kader/") + "/plus/1/saison_id/2024"
+            return club_url.replace("/startseite/", "/kader/") + "/plus/1/saison_id/2025"
         return club_url
     
     def parse_squad_page(self, html: str, club: Club) -> List[RawPlayerData]:

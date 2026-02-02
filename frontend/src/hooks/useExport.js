@@ -61,8 +61,6 @@ function getExportDimensions(aspectRatio) {
   switch (aspectRatio) {
     case 'square':
       return { width: baseWidth, height: baseWidth }
-    case 'landscape':
-      return { width: baseWidth, height: Math.round(baseWidth * 0.75) }
     case 'portrait':
     default:
       return { width: baseWidth, height: Math.round(baseWidth * 1.25) }
