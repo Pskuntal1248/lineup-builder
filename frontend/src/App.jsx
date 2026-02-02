@@ -87,7 +87,7 @@ function App() {
         />
         
         {/* Pitch Area */}
-        <div className="flex-1 flex flex-col bg-[#111114]">
+        <div className="flex-1 flex flex-col bg-black">
           {/* Pitch Container */}
           <div className="flex-1 flex items-center justify-center p-4 md:p-8 overflow-auto">
             <div className="w-full max-w-xl">
