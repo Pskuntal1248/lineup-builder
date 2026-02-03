@@ -13,11 +13,13 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        // Allow all origins for deployment flexibility
+        // Vercel domains: *.vercel.app, custom domains
         registry.addMapping("/api/**")
             .allowedOriginPatterns("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
-            .allowCredentials(true)
+            .allowCredentials(false)  // Set to false when using allowedOriginPatterns("*")
             .maxAge(3600);
     }
 }
