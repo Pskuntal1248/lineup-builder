@@ -48,7 +48,7 @@ public class PlayerController {
         SearchResultDTO<PlayerDTO> result = playerService.searchPlayers(request);
         
         log.info("Player search completed - found {} results out of {} total", 
-                result.content().size(), result.totalElements());
+                result.items().size(), result.total());
         
         return ResponseEntity.ok(result);
     }
