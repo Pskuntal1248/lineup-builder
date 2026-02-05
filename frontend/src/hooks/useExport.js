@@ -25,6 +25,13 @@ export function useExport() {
         pixelRatio: 2,
         skipFonts: true, // Skip font inlining to avoid CORS errors with Google Fonts
         backgroundColor: null,
+        filter: (node) => {
+          // Exclude link tags pointing to external fonts to avoid CORS errors
+          if (node.tagName === 'LINK' && node.href?.includes('fonts.googleapis.com')) {
+            return false
+          }
+          return true
+        },
         style: {
           transform: 'scale(1)',
           transformOrigin: 'top left'
@@ -61,8 +68,9 @@ export function useExport() {
       return dataUrl
     } catch (err) {
       console.error('Export error:', err)
-      setError(err.message)
-      alert(`Export failed: ${err.message}`)
+      const errorMessage = err?.message || err?.toString() || 'Unknown error occurred'
+      setError(errorMessage)
+      alert(`Export failed: ${errorMessage}\n\nCheck console for details`)
     } finally {
       setExporting(false)
     }

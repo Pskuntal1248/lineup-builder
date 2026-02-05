@@ -22,12 +22,10 @@ public class FormationController {
     
     @GetMapping
     public ResponseEntity<List<FormationDTO>> getAllFormations() {
-        log.info("Get all formations requested");
         List<FormationDTO> formations = formationService.getAllFormations()
             .stream()
             .map(FormationDTO::from)
             .toList();
-        log.info("Returning {} formations", formations.size());
         return ResponseEntity.ok(formations);
     }
     
