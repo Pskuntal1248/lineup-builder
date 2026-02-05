@@ -6,10 +6,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Self-ping scheduler to keep Render free tier awake.
- * Pings health endpoint every 5 minutes.
- */
 @Component
 public class KeepAliveScheduler {
 

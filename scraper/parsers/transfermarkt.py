@@ -5,23 +5,16 @@ from typing import List, Optional
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from models import RawPlayerData, Club
-
 logger = logging.getLogger(__name__)
-
 BASE_URL = "https://www.transfermarkt.com"
 class TransfermarktParser:
-   
-    
     def parse_league_clubs(self, html: str, league_name: str) -> List[Club]:
         clubs = []
         soup = BeautifulSoup(html, "lxml")
-        
-        # Find club links in the table
         table = soup.find("table", class_="items")
         if not table:
             logger.warning("Could not find clubs table")
-            return clubs
-        
+            return clubs 
         for row in table.find_all("tr", class_=["odd", "even"]):
             try:
                 club_cell = row.find("td", class_="hauptlink")

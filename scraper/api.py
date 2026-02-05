@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Football Scraper API Server
-Provides REST endpoints to scrape player data on-demand.
-"""
-
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import logging
@@ -25,7 +19,6 @@ teams_cache = {}  # Cache team lists per league
 
 @app.route('/api/leagues', methods=['GET'])
 def get_leagues():
-    """Get list of available leagues."""
     leagues = [
         {"id": slug, "name": config["name"], "country": config["country"]}
         for slug, config in TRANSFERMARKT_LEAGUES.items()
@@ -35,7 +28,6 @@ def get_leagues():
 
 @app.route('/api/leagues/<league_id>/teams', methods=['GET'])
 def get_teams(league_id):
-    """Get list of teams in a league."""
     if league_id not in TRANSFERMARKT_LEAGUES:
         return jsonify({"error": "League not found"}), 404
     
@@ -74,7 +66,6 @@ def get_teams(league_id):
 
 @app.route('/api/teams/scrape', methods=['POST'])
 def scrape_team():
-    """Scrape players for a specific team."""
     data = request.get_json()
     
     team_id = data.get('team_id')
@@ -176,7 +167,6 @@ def scrape_team():
 
 @app.route('/api/cache/clear', methods=['POST'])
 def clear_cache():
-    """Clear the player cache."""
     team_cache.clear()
     teams_cache.clear()
     return jsonify({"message": "Cache cleared"})
@@ -184,7 +174,6 @@ def clear_cache():
 
 @app.route('/health', methods=['GET'])
 def health():
-    """Health check endpoint."""
     return jsonify({"status": "ok"})
 
 

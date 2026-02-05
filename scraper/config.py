@@ -1,7 +1,3 @@
-"""
-Configuration and constants for the football player scraper.
-"""
-
 from typing import Dict, List
 
 # Request settings
@@ -97,12 +93,6 @@ FBREF_POSITION_MAP: Dict[str, str] = {
     "CF": "ST",
 }
 
-# League configurations for Transfermarkt
-# Season ID: 2025 = 2025-26 season (Transfermarkt uses starting year)
-# Update Schedule:
-#   - January/February: After winter transfer window closes
-#   - September: After summer transfer window closes
-# Next update: September 2026 (set CURRENT_SEASON to 2026 for 2026-27 season)
 CURRENT_SEASON = 2025
 
 TRANSFERMARKT_LEAGUES: Dict[str, Dict] = {

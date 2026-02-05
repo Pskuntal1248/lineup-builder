@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-
-
-
 import argparse
 import logging
 import sys
@@ -13,7 +10,6 @@ from exporter import export_to_json, export_to_csv, export_combined, export_all_
 
 
 def setup_logging(verbose: bool = False) -> None:
-    """Configure logging."""
     level = logging.DEBUG if verbose else logging.INFO
     
     logging.basicConfig(
@@ -28,7 +24,6 @@ def setup_logging(verbose: bool = False) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         description="Scrape football player data from Transfermarkt and FBref",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -87,7 +82,6 @@ def parse_args() -> argparse.Namespace:
 
 
 def get_target_leagues(args: argparse.Namespace) -> Optional[List[str]]:
-    """Determine which leagues to scrape based on arguments."""
     if args.league:
         return [args.league]
     elif args.leagues:
@@ -96,7 +90,6 @@ def get_target_leagues(args: argparse.Namespace) -> Optional[List[str]]:
 
 
 def main() -> int:
-    """Main entry point."""
     args = parse_args()
     
     # List leagues and exit

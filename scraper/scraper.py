@@ -1,7 +1,3 @@
-"""
-Main scraper orchestration module.
-"""
-
 import logging
 from typing import List, Dict, Optional
 
@@ -15,10 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class FootballScraper:
-    """
-    Main scraper class that orchestrates data collection from multiple sources.
-    """
-    
     def __init__(self, fetcher: Optional[Fetcher] = None):
         self.fetcher = fetcher or Fetcher()
         self.tm_parser = TransfermarktParser()
@@ -30,17 +22,6 @@ class FootballScraper:
         include_fbref: bool = True,
         max_clubs: Optional[int] = None,
     ) -> List[Player]:
-        """
-        Scrape all players from a league.
-        
-        Args:
-            league_slug: League identifier (e.g., "premier-league")
-            include_fbref: Whether to include FBref data for validation
-            max_clubs: Maximum number of clubs to scrape (for testing)
-            
-        Returns:
-            List of normalized Player objects
-        """
         league_config = TRANSFERMARKT_LEAGUES.get(league_slug)
         if not league_config:
             logger.error(f"Unknown league: {league_slug}")
@@ -81,7 +62,6 @@ class FootballScraper:
         return normalized
     
     def _get_league_clubs(self, league_config: Dict, league_name: str) -> List[Club]:
-        """Fetch and parse clubs from league page."""
         url = league_config.get("squad_url") or league_config["url"]
         
         html = self.fetcher.fetch(url)
@@ -92,7 +72,6 @@ class FootballScraper:
         return self.tm_parser.parse_league_clubs(html, league_name)
     
     def _scrape_club_players(self, club: Club) -> List[RawPlayerData]:
-        """Scrape players from a club's squad page."""
         if not club.squad_url:
             logger.warning(f"No squad URL for {club.name}")
             return []
@@ -105,7 +84,6 @@ class FootballScraper:
         return self.tm_parser.parse_squad_page(html, club)
     
     def _get_fbref_players(self, league_slug: str, league_name: str) -> List[RawPlayerData]:
-        """Fetch players from FBref for position validation."""
         url = FBREF_LEAGUES.get(league_slug)
         if not url:
             logger.warning(f"No FBref URL configured for {league_slug}")
@@ -123,16 +101,6 @@ class FootballScraper:
         include_fbref: bool = True,
         leagues: Optional[List[str]] = None,
     ) -> Dict[str, List[Player]]:
-        """
-        Scrape players from all configured leagues.
-        
-        Args:
-            include_fbref: Whether to include FBref data
-            leagues: Optional list of league slugs to scrape
-            
-        Returns:
-            Dictionary mapping league_slug to list of players
-        """
         target_leagues = leagues or list(TRANSFERMARKT_LEAGUES.keys())
         
         all_players = {}
@@ -148,7 +116,6 @@ class FootballScraper:
         return all_players
     
     def close(self):
-        """Close resources."""
         self.fetcher.close()
     
     def __enter__(self):

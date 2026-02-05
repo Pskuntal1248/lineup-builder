@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.util.Map;
 
-/**
- * Health check endpoint for monitoring and keep-alive pings
- */
 @RestController
 @RequestMapping("/api")
 public class HealthController {

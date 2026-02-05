@@ -1,7 +1,3 @@
-"""
-Position normalization for football player data.
-"""
-
 import logging
 from typing import List, Optional, Tuple
 
@@ -49,15 +45,6 @@ def normalize_positions(positions: List[str], source: str = "transfermarkt") -> 
 
 
 def derive_short_name(full_name: str) -> str:
-    """
-    Derive a short display name from the full name.
-    
-    Examples:
-        "Erling Braut Haaland" -> "E. Haaland"
-        "Lionel Messi" -> "L. Messi"
-        "Neymar Jr" -> "Neymar Jr"
-        "Ronaldo" -> "Ronaldo"
-    """
     if not full_name:
         return ""
     
@@ -82,16 +69,6 @@ def derive_short_name(full_name: str) -> str:
 
 
 def normalize_player(raw: RawPlayerData, fbref_data: Optional[RawPlayerData] = None) -> Optional[Player]:
-    """
-    Normalize raw player data into a Player model.
-    
-    Args:
-        raw: Raw player data from Transfermarkt
-        fbref_data: Optional FBref data for position validation
-        
-    Returns:
-        Normalized Player object or None if invalid
-    """
     # Normalize positions from Transfermarkt
     primary_pos, secondary_pos = normalize_positions(raw.positions, raw.source)
     
@@ -135,16 +112,6 @@ def merge_player_data(
     tm_players: List[RawPlayerData],
     fbref_players: List[RawPlayerData],
 ) -> List[Player]:
-    """
-    Merge Transfermarkt and FBref player data.
-    
-    Args:
-        tm_players: Players from Transfermarkt
-        fbref_players: Players from FBref
-        
-    Returns:
-        List of normalized Player objects
-    """
     # Create lookup for FBref players by normalized name
     fbref_lookup = {}
     for player in fbref_players:
@@ -168,7 +135,6 @@ def merge_player_data(
 
 
 def _normalize_name_for_matching(name: str) -> str:
-    """Normalize a name for fuzzy matching."""
     import unicodedata
     
     # Remove accents

@@ -1,7 +1,3 @@
-"""
-HTTP fetcher with retry logic and polite scraping.
-"""
-
 import time
 import logging
 from typing import Optional
@@ -20,8 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 class Fetcher:
-    """HTTP fetcher with retry logic and rate limiting."""
-    
     def __init__(
         self,
         delay: float = REQUEST_DELAY,
@@ -38,7 +32,6 @@ class Fetcher:
         self._last_request_time = 0
     
     def _wait_for_rate_limit(self) -> None:
-        """Enforce polite delay between requests."""
         elapsed = time.time() - self._last_request_time
         if elapsed < self.delay:
             sleep_time = self.delay - elapsed
@@ -46,15 +39,6 @@ class Fetcher:
             time.sleep(sleep_time)
     
     def fetch(self, url: str) -> Optional[str]:
-        """
-        Fetch a URL with retry logic.
-        
-        Args:
-            url: The URL to fetch
-            
-        Returns:
-            HTML content as string, or None if all retries failed
-        """
         for attempt in range(self.max_retries):
             try:
                 self._wait_for_rate_limit()
@@ -90,7 +74,6 @@ class Fetcher:
         return None
     
     def close(self) -> None:
-        """Close the session."""
         self.session.close()
     
     def __enter__(self):

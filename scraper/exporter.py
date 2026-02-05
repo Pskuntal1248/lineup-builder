@@ -1,7 +1,3 @@
-"""
-Export functions for player data.
-"""
-
 import json
 import csv
 import os
@@ -16,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 def ensure_output_dir() -> str:
-    """Create output directory if it doesn't exist."""
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
         logger.info(f"Created output directory: {OUTPUT_DIR}")
@@ -24,17 +19,7 @@ def ensure_output_dir() -> str:
 
 
 def export_to_json(players: List[Player], league_slug: str, league_name: str) -> str:
-    """
-    Export players to a JSON file.
-    
-    Args:
-        players: List of Player objects
-        league_slug: URL-friendly league identifier
-        league_name: Human-readable league name
-        
-    Returns:
-        Path to the exported file
-    """
+   
     ensure_output_dir()
     
     filename = f"{league_slug}.json"
@@ -56,16 +41,6 @@ def export_to_json(players: List[Player], league_slug: str, league_name: str) ->
 
 
 def export_to_csv(players: List[Player], league_slug: str) -> str:
-    """
-    Export players to a CSV file.
-    
-    Args:
-        players: List of Player objects
-        league_slug: URL-friendly league identifier
-        
-    Returns:
-        Path to the exported file
-    """
     ensure_output_dir()
     
     filename = f"{league_slug}.csv"
@@ -102,16 +77,6 @@ def export_to_csv(players: List[Player], league_slug: str) -> str:
 
 
 def export_all_leagues(all_players: Dict[str, List[Player]], format: str = "json") -> List[str]:
-    """
-    Export players from all leagues.
-    
-    Args:
-        all_players: Dictionary mapping league_slug to list of players
-        format: Export format ("json" or "csv")
-        
-    Returns:
-        List of exported file paths
-    """
     from config import TRANSFERMARKT_LEAGUES
     
     exported_files = []
@@ -133,15 +98,6 @@ def export_all_leagues(all_players: Dict[str, List[Player]], format: str = "json
 
 
 def export_combined(all_players: Dict[str, List[Player]]) -> str:
-    """
-    Export all players from all leagues to a single combined JSON file.
-    
-    Args:
-        all_players: Dictionary mapping league_slug to list of players
-        
-    Returns:
-        Path to the exported file
-    """
     ensure_output_dir()
     
     filepath = os.path.join(OUTPUT_DIR, "all-players.json")
