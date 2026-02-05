@@ -2,6 +2,8 @@ package com.lineupgenerator.controller;
 
 import com.lineupgenerator.dto.FormationDTO;
 import com.lineupgenerator.service.FormationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @RequestMapping("/api/formations")
 public class FormationController {
     
+    private static final Logger log = LoggerFactory.getLogger(FormationController.class);
     private final FormationService formationService;
     
     public FormationController(FormationService formationService) {
@@ -19,10 +22,12 @@ public class FormationController {
     
     @GetMapping
     public ResponseEntity<List<FormationDTO>> getAllFormations() {
+        log.info("Get all formations requested");
         List<FormationDTO> formations = formationService.getAllFormations()
             .stream()
             .map(FormationDTO::from)
             .toList();
+        log.info("Returning {} formations", formations.size());
         return ResponseEntity.ok(formations);
     }
     

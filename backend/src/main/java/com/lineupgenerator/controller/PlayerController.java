@@ -2,6 +2,8 @@ package com.lineupgenerator.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import com.lineupgenerator.service.PlayerService;
 @RequestMapping("/api/players")
 public class PlayerController {
     
+    private static final Logger log = LoggerFactory.getLogger(PlayerController.class);
     private final PlayerService playerService;
     
     public PlayerController(PlayerService playerService) {
@@ -36,10 +39,18 @@ public class PlayerController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
+        log.info("Player search request - query: {}, club: {}, nationality: {}, league: {}, position: {}, page: {}, size: {}",
+                query, club, nationality, league, position, page, size);
+        
         PlayerSearchRequest request = new PlayerSearchRequest(
             query, club, nationality, league, position, page, size
         );
-        return ResponseEntity.ok(playerService.searchPlayers(request));
+        SearchResultDTO<PlayerDTO> result = playerService.searchPlayers(request);
+        
+        log.info("Player search completed - found {} results out of {} total", 
+                result.content().size(), result.totalElements());
+        
+        return ResponseEntity.ok(result);
     }
     
     @GetMapping("/{id}")
@@ -72,6 +83,9 @@ public class PlayerController {
     
     @PostMapping("/reload")
     public ResponseEntity<Integer> reloadPlayers() {
-        return ResponseEntity.ok(playerService.reloadPlayers());
+        log.info("Player reload requested");
+        int count = playerService.reloadPlayers();
+        log.info("Player reload completed - loaded {} players", count);
+        return ResponseEntity.ok(count);
     }
 }
