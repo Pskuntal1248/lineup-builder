@@ -1,35 +1,18 @@
-"""
-Parser for Transfermarkt player data.
-"""
 
 import logging
 import re
 from typing import List, Optional
 from urllib.parse import urljoin
-
 from bs4 import BeautifulSoup
-
 from models import RawPlayerData, Club
 
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://www.transfermarkt.com"
-
-
 class TransfermarktParser:
-    """Parser for Transfermarkt HTML pages."""
+   
     
     def parse_league_clubs(self, html: str, league_name: str) -> List[Club]:
-        """
-        Parse clubs from a league page.
-        
-        Args:
-            html: HTML content of the league page
-            league_name: Name of the league
-            
-        Returns:
-            List of Club objects
-        """
         clubs = []
         soup = BeautifulSoup(html, "lxml")
         
@@ -41,19 +24,14 @@ class TransfermarktParser:
         
         for row in table.find_all("tr", class_=["odd", "even"]):
             try:
-                # Find club name and link
                 club_cell = row.find("td", class_="hauptlink")
                 if not club_cell:
                     continue
-                
                 link = club_cell.find("a")
                 if not link:
                     continue
-                
                 club_name = link.get_text(strip=True)
                 club_url = urljoin(BASE_URL, link.get("href", ""))
-                
-                # Convert to squad URL
                 squad_url = self._convert_to_squad_url(club_url)
                 
                 clubs.append(Club(
@@ -71,23 +49,11 @@ class TransfermarktParser:
         return clubs
     
     def _convert_to_squad_url(self, club_url: str) -> str:
-        """Convert club URL to squad/kader URL."""
-        # Example: /fc-arsenal/startseite/verein/11 -> /fc-arsenal/kader/verein/11/saison_id/2025
         if "/startseite/" in club_url:
             return club_url.replace("/startseite/", "/kader/") + "/plus/1/saison_id/2025"
         return club_url
     
     def parse_squad_page(self, html: str, club: Club) -> List[RawPlayerData]:
-        """
-        Parse players from a club squad page.
-        
-        Args:
-            html: HTML content of the squad page
-            club: Club object
-            
-        Returns:
-            List of RawPlayerData objects
-        """
         players = []
         soup = BeautifulSoup(html, "lxml")
         
@@ -106,7 +72,6 @@ class TransfermarktParser:
         return players
     
     def _parse_player_row(self, row, club: Club) -> Optional[RawPlayerData]:
-        """Parse a single player row from the squad table."""
         try:
             # Get player name and profile URL
             player_cell = row.find("td", class_="hauptlink")
@@ -157,7 +122,6 @@ class TransfermarktParser:
             return None
     
     def _is_position(self, text: str) -> bool:
-        """Check if text looks like a position."""
         position_keywords = [
             "goalkeeper", "keeper", "back", "defender", "midfield",
             "winger", "wing", "forward", "striker", "attack"
@@ -166,16 +130,6 @@ class TransfermarktParser:
         return any(kw in text_lower for kw in position_keywords)
     
     def parse_player_profile(self, html: str, profile_url: str) -> Optional[RawPlayerData]:
-        """
-        Parse detailed player data from profile page.
-        
-        Args:
-            html: HTML content of the player profile
-            profile_url: URL of the profile
-            
-        Returns:
-            RawPlayerData with detailed information
-        """
         soup = BeautifulSoup(html, "lxml")
         
         try:
