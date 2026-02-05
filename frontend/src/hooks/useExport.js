@@ -23,6 +23,7 @@ export function useExport() {
         height: dimensions.height,
         quality: 1,
         pixelRatio: 2,
+        skipFonts: true, // Skip font inlining to avoid CORS errors with Google Fonts
         backgroundColor: null,
         style: {
           transform: 'scale(1)',
