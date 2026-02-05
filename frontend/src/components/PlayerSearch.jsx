@@ -43,6 +43,9 @@ export default function PlayerSearch({ open, onOpenChange, onSelect, onClose, po
                 <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 rounded uppercase">{position}</span>
               )}
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Find and add players to your custom formation. Search by name, club, or nationality from 2,500+ players across top 5 leagues.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button className="w-7 h-7 rounded-lg hover:bg-[#1a1a1f] flex items-center justify-center text-zinc-500 hover:text-white transition-colors" onClick={onClose}>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
