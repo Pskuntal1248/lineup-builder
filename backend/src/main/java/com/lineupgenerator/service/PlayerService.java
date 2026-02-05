@@ -6,13 +6,18 @@ import com.lineupgenerator.dto.PlayerSearchRequest;
 import com.lineupgenerator.dto.SearchResultDTO;
 import com.lineupgenerator.dto.PlayerDTO;
 import com.lineupgenerator.model.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,6 +30,7 @@ import java.util.stream.Stream;
 @Service
 public class PlayerService {
     
+    private static final Logger log = LoggerFactory.getLogger(PlayerService.class);
     private static final Pattern DIACRITICS_PATTERN = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     
     private final List<Player> players = new ArrayList<>();
@@ -35,15 +41,50 @@ public class PlayerService {
     
     @PostConstruct
     public void initializePlayers() {
-        loadPlayersFromScraperOutput();
+        log.info("Initializing players...");
+        
+        // Try loading from classpath resources first (for production)
+        int loadedFromClasspath = loadPlayersFromClasspath();
+        
+        // If no players loaded from classpath, try file system (for development)
+        if (loadedFromClasspath == 0) {
+            log.info("No players found in classpath, trying file system");
+            loadPlayersFromScraperOutput();
+        }
+        
+        log.info("Total players loaded: {}", players.size());
+    }
+    
+    private int loadPlayersFromClasspath() {
+        int initialSize = players.size();
+        try {
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath:data/*.json");
+            
+            log.info("Found {} JSON files in classpath", resources.length);
+            
+            for (Resource resource : resources) {
+                try (InputStream is = resource.getInputStream()) {
+                    loadFromInputStream(is, resource.getFilename());
+                } catch (Exception e) {
+                    log.error("Error loading players from classpath resource: {}", resource.getFilename(), e);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error loading players from classpath", e);
+        }
+        return players.size() - initialSize;
     }
     
     private void loadPlayersFromScraperOutput() {
         try {
             Path outputPath = Paths.get(scraperOutputDir).toAbsolutePath();
             if (!Files.exists(outputPath)) {
+                log.warn("Scraper output directory not found: {}", outputPath);
                 return;
             }
+
+            log.info("Loading players from file system: {}", outputPath);
 
             Path combinedFile = outputPath.resolve("all-players.json");
             if (Files.exists(combinedFile)) {
@@ -57,11 +98,30 @@ public class PlayerService {
                          try {
                              loadFromJsonFile(p.toFile());
                          } catch (Exception e) {
+                             log.error("Error loading file: {}", p, e);
                          }
                      });
             }
 
         } catch (Exception e) {
+            log.error("Error loading players from scraper output", e);
+        }
+    }
+    
+    private void loadFromInputStream(InputStream is, String filename) throws IOException {
+        JsonNode root = objectMapper.readTree(is);
+        JsonNode playersNode = root.get("players");
+        
+        if (playersNode != null && playersNode.isArray()) {
+            int count = 0;
+            for (JsonNode playerNode : playersNode) {
+                Player player = parsePlayer(playerNode);
+                if (player != null) {
+                    players.add(player);
+                    count++;
+                }
+            }
+            log.info("Loaded {} players from {}", count, filename);
         }
     }
     
@@ -78,6 +138,7 @@ public class PlayerService {
                     count++;
                 }
             }
+            log.info("Loaded {} players from {}", count, file.getName());
         }
     }
     
