@@ -8,6 +8,7 @@ export function useExport() {
   const exportLineup = useCallback(async (element, lineup, settings, format = 'png') => {
     if (!element) {
       setError('No element to export')
+      console.error('Export failed: No element provided')
       return
     }
 
@@ -29,21 +30,38 @@ export function useExport() {
         }
       }
 
+      console.log('Starting export with format:', format, 'dimensions:', dimensions)
+
       let dataUrl
       if (format === 'svg') {
         dataUrl = await toSvg(element, options)
+      } else if (format === 'jpeg' || format === 'jpg') {
+        // For JPEG, we need a white background
+        dataUrl = await toPng(element, { ...options, backgroundColor: '#ffffff' })
       } else {
         dataUrl = await toPng(element, options)
       }
 
+      console.log('Export data URL generated, length:', dataUrl.length)
+
+      // Create download link
       const link = document.createElement('a')
-      link.download = `lineup-${lineup.formationId}-${Date.now()}.${format}`
+      const fileName = `lineup-${lineup.formationId}-${Date.now()}.${format === 'jpeg' || format === 'jpg' ? 'jpg' : format}`
+      link.download = fileName
       link.href = dataUrl
+      
+      // Append to body, click, and remove
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
+      
+      console.log('Export completed:', fileName)
 
       return dataUrl
     } catch (err) {
+      console.error('Export error:', err)
       setError(err.message)
+      alert(`Export failed: ${err.message}`)
     } finally {
       setExporting(false)
     }
