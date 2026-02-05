@@ -18,7 +18,6 @@ import com.lineupgenerator.service.PlayerService;
 
 @RestController
 @RequestMapping("/api/players")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
 public class PlayerController {
     
     private final PlayerService playerService;

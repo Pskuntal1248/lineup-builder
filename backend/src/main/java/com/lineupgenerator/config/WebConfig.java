@@ -13,9 +13,6 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // Allow all origins for deployment flexibility
-        // Vercel domains: *.vercel.app, custom domains
-        // Apply to all paths to handle both /api/** and root paths
         registry.addMapping("/**")
             .allowedOriginPatterns("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
