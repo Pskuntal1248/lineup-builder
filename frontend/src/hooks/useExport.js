@@ -23,12 +23,25 @@ export function useExport() {
         height: dimensions.height,
         quality: 1,
         pixelRatio: 2,
-        skipFonts: true, // Skip font inlining to avoid CORS errors with Google Fonts
+        skipFonts: true,
         backgroundColor: null,
+        fontEmbedCSS: '', // Provide empty string to prevent any font CSS inlining attempts
         filter: (node) => {
-          // Exclude link tags pointing to external fonts to avoid CORS errors
-          if (node.tagName === 'LINK' && node.href?.includes('fonts.googleapis.com')) {
-            return false
+          // Exclude external stylesheets to avoid CORS SecurityError
+          if (node.tagName === 'LINK' && node.getAttribute?.('rel') === 'stylesheet') {
+            const href = node.getAttribute('href') || ''
+            if (href.startsWith('http') && !href.startsWith(window.location.origin)) {
+              return false
+            }
+          }
+          // Exclude <style> tags injected by external resources
+          if (node.tagName === 'STYLE' && node.sheet) {
+            try {
+              // Test if rules are accessible
+              const _ = node.sheet.cssRules
+            } catch {
+              return false
+            }
           }
           return true
         },
